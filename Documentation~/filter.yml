@@ -1,0 +1,47 @@
+apiRules:
+  - exclude:
+      uidRegex: OnUpdate
+      type: Method
+  - exclude:
+      uidRegex: OnCreate
+      type: Method
+  - exclude:
+      uidRegex: OnDestroy
+      type: Method
+  - exclude:
+      uidRegex: OnStartRunning
+      type: Method
+  - exclude:
+      uidRegex: OnStopRunning
+      type: Method
+  - exclude:
+      uidRegex: OnBeforeSerialize
+      type: Method
+  - exclude:
+      uidRegex: OnAfterDeserialize
+      type: Method
+  - exclude:
+      uidRegex: Execute
+      type: Method
+  - exclude:
+      uidRegex: OnInspectorGUI
+      type: Method
+  - exclude:
+      uidRegex: ScheduleParallelByRef
+      type: Method
+  - exclude:
+      uidRegex: .*Authoring.*
+      type: Namespace
+  - exclude:
+      uidRegex: Tests$
+      type: Namespace
+  - exclude:
+      uidRegex: ^Global Namespace.*
+      type: Namespace
+  - exclude:
+      uidRegex: ^Generated.*
+      type: Namespace
+  - exclude:
+      hasAttribute:
+        uid: System.Runtime.CompilerServices.CompilerGenerated
+      type: Type

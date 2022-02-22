@@ -1,0 +1,40 @@
+{
+  "name": "com.unity.charactercontroller",
+  "displayName": "Character Controller",
+  "version": "1.0.0-exp.2",
+  "unity": "2022.2",
+  "unityRelease": "6f1",
+  "description": "This package provides a customizable character controller solution for Entities. \n\n Navigate to the \"Samples\" tab in order to download the \"Standard Characters\", which serve as a starting point for implementing your own characters.",
+  "dependencies": {
+    "com.unity.entities": "1.0.0-pre.44",
+    "com.unity.physics": "1.0.0-pre.44",
+    "com.unity.modules.uielements": "1.0.0",
+    "com.unity.modules.physics": "1.0.0"
+  },
+  "keywords": [
+    "unity",
+    "character",
+    "controller",
+    "physics",
+    "rival"
+  ],
+  "samples": [
+    {
+      "displayName": "Standard Characters",
+      "description": "Starter assets for first-person and third-person characters",
+      "path": "Samples~/StandardCharacters"
+    }
+  ],
+  "_upm": {
+    "changelog": "Initial release"
+  },
+  "upmCi": {
+    "footprint": "896a591832da3411b875e92f23bcab720f03a5a2"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.charactercontroller@1.0/manual/index.html",
+  "repository": {
+    "url": "https://github.cds.internal.unity3d.com/unity/com.unity.charactercontroller.git",
+    "type": "git",
+    "revision": "a5cf74c1534a37d8553f7f7a8a6c5f2140f280a8"
+  }
+}
