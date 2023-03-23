@@ -86,11 +86,6 @@ namespace Unity.CharacterController.RuntimeTests
 
 				hitMaterial = tmpHits[0].Material;
 			}
-
-			byte GetTags(Entity entity)
-			{
-				return World.EntityManager.GetComponentData<PhysicsCustomTags>(entity).Value;
-			}
 			
 			NativeList<DistanceHit> tmpHits = new NativeList<DistanceHit>(100, Allocator.Temp);
 			Entity bodyA = CharacterTestUtils.CreateSphereBody(World, default, quaternion.identity, 1f, BodyMotionType.Kinematic, CollisionResponsePolicy.Collide, false);
@@ -117,7 +112,7 @@ namespace Unity.CharacterController.RuntimeTests
 			Assert.IsTrue(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
 			
 			// --------------------------------------------------------------------------------------
-			
+			 
 			SetTagsM(ref hasTag, true, true, true, true, true, true, true, true); 
 			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,true, true, true, true, true, true, true, true, out bodyMaterial); 
 			Assert.IsTrue(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));

@@ -183,6 +183,7 @@ namespace Unity.CharacterController
         /// Job that interpolates the character visual transforms
         /// </summary>
         [BurstCompile]
+        [WithAll(typeof(KinematicCharacterBody))]
         public partial struct CharacterInterpolationJob : IJobEntity
         {
             /// <summary>

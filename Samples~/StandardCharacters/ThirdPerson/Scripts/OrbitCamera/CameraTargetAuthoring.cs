@@ -12,9 +12,10 @@ public class CameraTargetAuthoring : MonoBehaviour
     {
         public override void Bake(CameraTargetAuthoring authoring)
         {
-            AddComponent(new CameraTarget
+            Entity entity = GetEntity(TransformUsageFlags.Dynamic);
+            AddComponent(entity, new CameraTarget
             {
-                TargetEntity = GetEntity(authoring.Target),
+                TargetEntity = GetEntity(authoring.Target, TransformUsageFlags.Dynamic),
             });
         }
     }

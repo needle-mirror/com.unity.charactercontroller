@@ -271,7 +271,6 @@ namespace Unity.CharacterController
                     InterpolateRotation = authoringProperties.InterpolateRotation ? (byte)1 : (byte)0,
                     InterpolatePosition = authoringProperties.InterpolatePosition ? (byte)1 : (byte)0,
                 });
-                dstManager.AddComponentData(entity, new PropagateLocalToWorld());
             }
         }
 
@@ -310,7 +309,6 @@ namespace Unity.CharacterController
                     InterpolateRotation = authoringProperties.InterpolateRotation ? (byte)1 : (byte)0,
                     InterpolatePosition = authoringProperties.InterpolatePosition ? (byte)1 : (byte)0,
                 });
-                commandBuffer.AddComponent(entity, new PropagateLocalToWorld());
             }
         }
 
@@ -335,33 +333,34 @@ namespace Unity.CharacterController
             {
                 UnityEngine.Debug.LogError("ERROR: kinematic character objects cannot have a PhysicsBodyAuthoring component. The correct physics components will be setup automatically during conversion. Conversion will be aborted");
                 return;
-            }
+            } 
+
+            Entity characterEntity = baker.GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
 
             // Base character components
-            baker.AddComponent(new KinematicCharacterProperties(authoringProperties));
-            baker.AddComponent(KinematicCharacterBody.GetDefault());
-            baker.AddComponent(new StoredKinematicCharacterData());
+            baker.AddComponent(characterEntity, new KinematicCharacterProperties(authoringProperties)); 
+            baker.AddComponent(characterEntity, KinematicCharacterBody.GetDefault());
+            baker.AddComponent(characterEntity, new StoredKinematicCharacterData());
 
-            baker.AddBuffer<KinematicCharacterHit>();
-            baker.AddBuffer<KinematicCharacterDeferredImpulse>();
-            baker.AddBuffer<StatefulKinematicCharacterHit>();
-            baker.AddBuffer<KinematicVelocityProjectionHit>();
+            baker.AddBuffer<KinematicCharacterHit>(characterEntity);
+            baker.AddBuffer<KinematicCharacterDeferredImpulse>(characterEntity);
+            baker.AddBuffer<StatefulKinematicCharacterHit>(characterEntity);
+            baker.AddBuffer<KinematicVelocityProjectionHit>(characterEntity);
 
             // Kinematic physics body components
-            baker.AddComponent(new PhysicsVelocity());
-            baker.AddComponent(PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
-            baker.AddComponent(new PhysicsGravityFactor { Value = 0f });
-            baker.AddComponent(new PhysicsCustomTags { Value = authoringProperties.CustomPhysicsBodyTags.Value });
+            baker.AddComponent(characterEntity, new PhysicsVelocity());
+            baker.AddComponent(characterEntity, PhysicsMass.CreateKinematic(MassProperties.UnitSphere));
+            baker.AddComponent(characterEntity, new PhysicsGravityFactor { Value = 0f });
+            baker.AddComponent(characterEntity, new PhysicsCustomTags { Value = authoringProperties.CustomPhysicsBodyTags.Value });
 
             // Interpolation
             if (authoringProperties.InterpolatePosition || authoringProperties.InterpolateRotation)
             {
-                baker.AddComponent(new CharacterInterpolation
+                baker.AddComponent(characterEntity, new CharacterInterpolation
                 {
                     InterpolateRotation = authoringProperties.InterpolateRotation ? (byte)1 : (byte)0,
                     InterpolatePosition = authoringProperties.InterpolatePosition ? (byte)1 : (byte)0,
                 });
-                baker.AddComponent(new PropagateLocalToWorld());
             }
         }
 
@@ -406,38 +405,27 @@ namespace Unity.CharacterController
         {
             if (fixedDeltaTime > 0f)
             {
-                float rotationRatio = math.clamp(deltaTime / fixedDeltaTime, 0f, 1f);
+                float rotationRatio = deltaTime / fixedDeltaTime;
                 quaternion rotationFromCharacterParent = math.slerp(quaternion.identity, fixedRateRotation, rotationRatio);
                 modifiedRotation = math.mul(modifiedRotation, rotationFromCharacterParent);
             }
         }
 
         /// <summary>
-        /// Determines if a hit has "Collide" collision response, or is a collideable character
+        /// Sets various properties involved in making the character detect different forms of collisions.
+        /// Warning: it is up to you to ensure that the collider passed as parameter to this function is unique, otherwise this will change the collision response for
+        /// all characters that share this collider.
         /// </summary>
-        /// <param name="storedCharacterBodyPropertiesLookup"> Lookup for the component that stores character data on character entities </param>
-        /// <param name="hitMaterial"> The hit material </param>
-        /// <param name="hitEntity"> The hit entity </param>
-        /// <returns></returns>
-        public static bool IsHitCollidableOrCharacter(
-            in ComponentLookup<StoredKinematicCharacterData> storedCharacterBodyPropertiesLookup, 
-            Material hitMaterial,
-            Entity hitEntity)
+        /// <param name="active">Whether or not collisions should be active</param>
+        /// <param name="characterProperties">The character properties component</param>
+        /// <param name="collider">The character's collider component</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetCollisionDetectionActive(bool active, ref KinematicCharacterProperties characterProperties, ref PhysicsCollider collider)
         {
-            // Only collide with collidable colliders
-            if (hitMaterial.CollisionResponse == CollisionResponsePolicy.Collide ||
-                hitMaterial.CollisionResponse == CollisionResponsePolicy.CollideRaiseCollisionEvents)
-            {
-                return true;
-            }
-            
-            // If collider's collision response is Trigger or None, it could potentially be a Character. So make a special exception in that case
-            if (storedCharacterBodyPropertiesLookup.HasComponent(hitEntity))
-            {
-                return true;
-            }
-
-            return false;
+            characterProperties.EvaluateGrounding = active;
+            characterProperties.DetectMovementCollisions = active;
+            characterProperties.DecollideFromOverlaps = active;
+            collider.Value.Value.SetCollisionResponse(active ? CollisionResponsePolicy.Collide : CollisionResponsePolicy.None);
         }
     }
 }

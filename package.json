@@ -1,13 +1,13 @@
 {
   "name": "com.unity.charactercontroller",
   "displayName": "Character Controller",
-  "version": "1.0.0-exp.2",
+  "version": "1.0.0-exp.4",
   "unity": "2022.2",
-  "unityRelease": "6f1",
+  "unityRelease": "10f1",
   "description": "This package provides a customizable character controller solution for Entities. \n\n Navigate to the \"Samples\" tab in order to download the \"Standard Characters\", which serve as a starting point for implementing your own characters.",
   "dependencies": {
-    "com.unity.entities": "1.0.0-pre.44",
-    "com.unity.physics": "1.0.0-pre.44",
+    "com.unity.entities": "1.0.0-pre.65",
+    "com.unity.physics": "1.0.0-pre.65",
     "com.unity.modules.uielements": "1.0.0",
     "com.unity.modules.physics": "1.0.0"
   },
@@ -26,15 +26,15 @@
     }
   ],
   "_upm": {
-    "changelog": "Initial release"
+    "changelog": "### Upgrade guide\n\nFollow these steps to upgrade your existing character controllers to this new version:\n* In your character prefabs, make sure the `PhysicsShape`'s collision response is set to \"Collide\". (previously, it was set to \"Raise Trigger Events\" by default)\n* The default implementation of your character Aspect's `CanCollideWithHit` should now simply do: `return PhysicsUtilities.IsCollidable(hit.Material);`\n\n### Added\n\n* Added a `DisableCharacterDynamicPairsSystem`, which disables physics body pairs between dynamic rigidbodies and \"simulated dynamic\" characters. This means \"simulated dynamic\" characters no longer need to rely on having their collision response set to \"None\" or \"Raise Trigger Events\" in order to properly be pushed by other rigidbodies. All character collision responses should now be set to \"Collide\". This system's update can be disabled by destroying the `DisableCharacterDynamicPairs` singleton at runtime\n\n### Changed\n\n* All authorings now explicitly specify transform usage flags\n\n### Removed\n\n* `KinematicCharacterUtilities.IsHitCollidableOrCharacter` was removed. Use `PhysicsUtilities.IsCollidable` instead\n* `KinematicCharacterProperties.SetCollisionDetectionActive` was removed. Use `KinematicCharacterUtilities.SetCollisionDetectionActive` instead\n\n### Fixed\n\n* Character interpolation is now ignored on disabled characters (disabled `KinematicCharacterBBody` component)"
   },
   "upmCi": {
-    "footprint": "896a591832da3411b875e92f23bcab720f03a5a2"
+    "footprint": "30c2a6784bc3a28b96af7aa25d7bb03fbf000e94"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.charactercontroller@1.0/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.charactercontroller.git",
     "type": "git",
-    "revision": "a5cf74c1534a37d8553f7f7a8a6c5f2140f280a8"
+    "revision": "5e9630039179747733fc5f6016ec8ca85b39d34a"
   }
 }

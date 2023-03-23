@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Unity.CharacterController.RuntimeTests
 {
-    public struct FixedInputEvent
+    public struct TestFixedInputEvent
     {
         private byte _wasEverSet;
         private uint _lastSetTick;

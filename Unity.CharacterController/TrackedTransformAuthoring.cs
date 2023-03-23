@@ -21,7 +21,7 @@ namespace Unity.CharacterController
                     PreviousFixedRateTransform = currentTransform,
                 };
 
-                AddComponent(trackedTransform);
+                AddComponent(GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace), trackedTransform);
             }
         }
     }

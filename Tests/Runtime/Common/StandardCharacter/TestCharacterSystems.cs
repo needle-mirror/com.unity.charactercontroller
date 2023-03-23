@@ -12,10 +12,10 @@ namespace Unity.CharacterController.RuntimeTests
 {
     [UpdateInGroup(typeof(KinematicCharacterPhysicsUpdateGroup))]
     [BurstCompile]
-    public partial struct ThirdPersonCharacterPhysicsUpdateSystem : ISystem
+    public partial struct TestCharacterPhysicsUpdateSystem : ISystem
     {
         private EntityQuery _characterQuery;
-        private ThirdPersonCharacterUpdateContext _context;
+        private TestCharacterUpdateContext _context;
         private KinematicCharacterUpdateContext _baseContext;
 
         [BurstCompile]
@@ -23,11 +23,11 @@ namespace Unity.CharacterController.RuntimeTests
         {
             _characterQuery = KinematicCharacterUtilities.GetBaseCharacterQueryBuilder()
                 .WithAll<
-                    ThirdPersonCharacterComponent,
-                    ThirdPersonCharacterControl>()
+                    TestCharacterComponent,
+                    TestCharacterControl>()
                 .Build(ref state);
 
-            _context = new ThirdPersonCharacterUpdateContext();
+            _context = new TestCharacterUpdateContext();
             _context.OnSystemCreate(ref state);
             _baseContext = new KinematicCharacterUpdateContext();
             _baseContext.OnSystemCreate(ref state);
@@ -47,7 +47,7 @@ namespace Unity.CharacterController.RuntimeTests
             _context.OnSystemUpdate(ref state);
             _baseContext.OnSystemUpdate(ref state, SystemAPI.Time, SystemAPI.GetSingleton<PhysicsWorldSingleton>());
 
-            ThirdPersonCharacterPhysicsUpdateJob job = new ThirdPersonCharacterPhysicsUpdateJob
+            TestCharacterPhysicsUpdateJob job = new TestCharacterPhysicsUpdateJob
             {
                 Context = _context,
                 BaseContext = _baseContext,
@@ -57,12 +57,12 @@ namespace Unity.CharacterController.RuntimeTests
 
         [BurstCompile]
         [WithAll(typeof(Simulate))]
-        public partial struct ThirdPersonCharacterPhysicsUpdateJob : IJobEntity, IJobEntityChunkBeginEnd
+        public partial struct TestCharacterPhysicsUpdateJob : IJobEntity, IJobEntityChunkBeginEnd
         {
-            public ThirdPersonCharacterUpdateContext Context;
+            public TestCharacterUpdateContext Context;
             public KinematicCharacterUpdateContext BaseContext;
 
-            void Execute(ref ThirdPersonCharacterAspect characterAspect)
+            void Execute(ref TestCharacterAspect characterAspect)
             {
                 characterAspect.PhysicsUpdate(ref Context, ref BaseContext);
             }
@@ -81,10 +81,10 @@ namespace Unity.CharacterController.RuntimeTests
 
     [UpdateInGroup(typeof(KinematicCharacterVariableUpdateGroup))]
     [BurstCompile]
-    public partial struct ThirdPersonCharacterVariableUpdateSystem : ISystem
+    public partial struct TestCharacterVariableUpdateSystem : ISystem
     {
         private EntityQuery _characterQuery;
-        private ThirdPersonCharacterUpdateContext _context;
+        private TestCharacterUpdateContext _context;
         private KinematicCharacterUpdateContext _baseContext;
 
         [BurstCompile]
@@ -92,11 +92,11 @@ namespace Unity.CharacterController.RuntimeTests
         {
             _characterQuery = KinematicCharacterUtilities.GetBaseCharacterQueryBuilder()
                 .WithAll<
-                    ThirdPersonCharacterComponent,
-                    ThirdPersonCharacterControl>()
+                    TestCharacterComponent,
+                    TestCharacterControl>()
                 .Build(ref state);
 
-            _context = new ThirdPersonCharacterUpdateContext();
+            _context = new TestCharacterUpdateContext();
             _context.OnSystemCreate(ref state);
             _baseContext = new KinematicCharacterUpdateContext();
             _baseContext.OnSystemCreate(ref state);
@@ -115,7 +115,7 @@ namespace Unity.CharacterController.RuntimeTests
             _context.OnSystemUpdate(ref state);
             _baseContext.OnSystemUpdate(ref state, SystemAPI.Time, SystemAPI.GetSingleton<PhysicsWorldSingleton>());
 
-            ThirdPersonCharacterVariableUpdateJob job = new ThirdPersonCharacterVariableUpdateJob
+            TestCharacterVariableUpdateJob job = new TestCharacterVariableUpdateJob
             {
                 Context = _context,
                 BaseContext = _baseContext,
@@ -125,12 +125,12 @@ namespace Unity.CharacterController.RuntimeTests
 
         [BurstCompile]
         [WithAll(typeof(Simulate))]
-        public partial struct ThirdPersonCharacterVariableUpdateJob : IJobEntity, IJobEntityChunkBeginEnd
+        public partial struct TestCharacterVariableUpdateJob : IJobEntity, IJobEntityChunkBeginEnd
         {
-            public ThirdPersonCharacterUpdateContext Context;
+            public TestCharacterUpdateContext Context;
             public KinematicCharacterUpdateContext BaseContext;
 
-            void Execute(ref ThirdPersonCharacterAspect characterAspect)
+            void Execute(ref TestCharacterAspect characterAspect)
             {
                 characterAspect.VariableUpdate(ref Context, ref BaseContext);
             }

@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace Unity.CharacterController.RuntimeTests
 {
-    public struct ThirdPersonCharacterUpdateContext
+    public struct TestCharacterUpdateContext
     {
         // Here, you may add additional global data for your character updates, such as ComponentLookups, Singletons, NativeCollections, etc...
         // The data you add here will be accessible in your character updates and all of your character "callbacks".
@@ -30,15 +30,15 @@ namespace Unity.CharacterController.RuntimeTests
         }
     }
 
-    public readonly partial struct ThirdPersonCharacterAspect : IAspect, IKinematicCharacterProcessor<ThirdPersonCharacterUpdateContext>
+    public readonly partial struct TestCharacterAspect : IAspect, IKinematicCharacterProcessor<TestCharacterUpdateContext>
     {
         public readonly KinematicCharacterAspect CharacterAspect;
-        public readonly RefRW<ThirdPersonCharacterComponent> CharacterComponent;
-        public readonly RefRW<ThirdPersonCharacterControl> CharacterControl;
+        public readonly RefRW<TestCharacterComponent> CharacterComponent;
+        public readonly RefRW<TestCharacterControl> CharacterControl;
 
-        public void PhysicsUpdate(ref ThirdPersonCharacterUpdateContext context, ref KinematicCharacterUpdateContext baseContext)
+        public void PhysicsUpdate(ref TestCharacterUpdateContext context, ref KinematicCharacterUpdateContext baseContext)
         {
-            ref ThirdPersonCharacterComponent characterComponent = ref CharacterComponent.ValueRW;
+            ref TestCharacterComponent characterComponent = ref CharacterComponent.ValueRW;
             ref KinematicCharacterBody characterBody = ref CharacterAspect.CharacterBody.ValueRW;
             ref float3 characterPosition = ref CharacterAspect.LocalTransform.ValueRW.Position;
 
@@ -59,12 +59,12 @@ namespace Unity.CharacterController.RuntimeTests
             CharacterAspect.Update_ProcessStatefulCharacterHits();
         }
 
-        private void HandleVelocityControl(ref ThirdPersonCharacterUpdateContext context, ref KinematicCharacterUpdateContext baseContext)
+        private void HandleVelocityControl(ref TestCharacterUpdateContext context, ref KinematicCharacterUpdateContext baseContext)
         {
             float deltaTime = baseContext.Time.DeltaTime;
             ref KinematicCharacterBody characterBody = ref CharacterAspect.CharacterBody.ValueRW;
-            ref ThirdPersonCharacterComponent characterComponent = ref CharacterComponent.ValueRW;
-            ref ThirdPersonCharacterControl characterControl = ref CharacterControl.ValueRW;
+            ref TestCharacterComponent characterComponent = ref CharacterComponent.ValueRW;
+            ref TestCharacterControl characterControl = ref CharacterControl.ValueRW;
 
             if (characterBody.IsGrounded)
             {
@@ -102,11 +102,11 @@ namespace Unity.CharacterController.RuntimeTests
             }
         }
 
-        public void VariableUpdate(ref ThirdPersonCharacterUpdateContext context, ref KinematicCharacterUpdateContext baseContext)
+        public void VariableUpdate(ref TestCharacterUpdateContext context, ref KinematicCharacterUpdateContext baseContext)
         {
             ref KinematicCharacterBody characterBody = ref CharacterAspect.CharacterBody.ValueRW;
-            ref ThirdPersonCharacterComponent characterComponent = ref CharacterComponent.ValueRW;
-            ref ThirdPersonCharacterControl characterControl = ref CharacterControl.ValueRW;
+            ref TestCharacterComponent characterComponent = ref CharacterComponent.ValueRW;
+            ref TestCharacterControl characterControl = ref CharacterControl.ValueRW;
             ref quaternion characterRotation = ref CharacterAspect.LocalTransform.ValueRW.Rotation;
 
             // Add rotation from parent body to the character rotation
@@ -123,7 +123,7 @@ namespace Unity.CharacterController.RuntimeTests
         #region Character Processor Callbacks
 
         public void UpdateGroundingUp(
-            ref ThirdPersonCharacterUpdateContext context,
+            ref TestCharacterUpdateContext context,
             ref KinematicCharacterUpdateContext baseContext)
         {
             ref KinematicCharacterBody characterBody = ref CharacterAspect.CharacterBody.ValueRW;
@@ -132,23 +132,20 @@ namespace Unity.CharacterController.RuntimeTests
         }
 
         public bool CanCollideWithHit(
-            ref ThirdPersonCharacterUpdateContext context,
+            ref TestCharacterUpdateContext context,
             ref KinematicCharacterUpdateContext baseContext,
             in BasicHit hit)
         {
-            return KinematicCharacterUtilities.IsHitCollidableOrCharacter(
-                in baseContext.StoredCharacterBodyPropertiesLookup,
-                hit.Material,
-                hit.Entity);
+            return PhysicsUtilities.IsCollidable(hit.Material);
         }
 
         public bool IsGroundedOnHit(
-            ref ThirdPersonCharacterUpdateContext context,
+            ref TestCharacterUpdateContext context,
             ref KinematicCharacterUpdateContext baseContext,
             in BasicHit hit,
             int groundingEvaluationType)
         {
-            ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
+            TestCharacterComponent characterComponent = CharacterComponent.ValueRO;
 
             return CharacterAspect.Default_IsGroundedOnHit(
                 in this,
@@ -160,7 +157,7 @@ namespace Unity.CharacterController.RuntimeTests
         }
 
         public void OnMovementHit(
-            ref ThirdPersonCharacterUpdateContext context,
+            ref TestCharacterUpdateContext context,
             ref KinematicCharacterUpdateContext baseContext,
             ref KinematicCharacterHit hit,
             ref float3 remainingMovementDirection,
@@ -170,7 +167,7 @@ namespace Unity.CharacterController.RuntimeTests
         {
             ref KinematicCharacterBody characterBody = ref CharacterAspect.CharacterBody.ValueRW;
             ref float3 characterPosition = ref CharacterAspect.LocalTransform.ValueRW.Position;
-            ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
+            TestCharacterComponent characterComponent = CharacterComponent.ValueRO;
 
             CharacterAspect.Default_OnMovementHit(
                 in this,
@@ -189,7 +186,7 @@ namespace Unity.CharacterController.RuntimeTests
         }
 
         public void OverrideDynamicHitMasses(
-            ref ThirdPersonCharacterUpdateContext context,
+            ref TestCharacterUpdateContext context,
             ref KinematicCharacterUpdateContext baseContext,
             ref PhysicsMass characterMass,
             ref PhysicsMass otherMass,
@@ -198,7 +195,7 @@ namespace Unity.CharacterController.RuntimeTests
         }
 
         public void ProjectVelocityOnHits(
-            ref ThirdPersonCharacterUpdateContext context,
+            ref TestCharacterUpdateContext context,
             ref KinematicCharacterUpdateContext baseContext,
             ref float3 velocity,
             ref bool characterIsGrounded,
@@ -206,7 +203,7 @@ namespace Unity.CharacterController.RuntimeTests
             in DynamicBuffer<KinematicVelocityProjectionHit> velocityProjectionHits,
             float3 originalVelocityDirection)
         {
-            ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
+            TestCharacterComponent characterComponent = CharacterComponent.ValueRO;
 
             CharacterAspect.Default_ProjectVelocityOnHits(
                 ref velocity,

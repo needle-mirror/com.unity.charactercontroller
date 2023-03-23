@@ -256,18 +256,6 @@ namespace Unity.CharacterController
         {
             return !SimulateDynamicBody;
         }
-
-        /// <summary>
-        /// Sets various properties involved in making the character detect different forms of collisions
-        /// </summary>
-        /// <param name="active"></param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetCollisionDetectionActive(bool active)
-        {
-            EvaluateGrounding = active;
-            DetectMovementCollisions = active;
-            DecollideFromOverlaps = active;
-        }
     }
     
     /// <summary>

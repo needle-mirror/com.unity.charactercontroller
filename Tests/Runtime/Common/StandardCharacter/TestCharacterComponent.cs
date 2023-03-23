@@ -8,7 +8,7 @@ using Unity.CharacterController;
 namespace Unity.CharacterController.RuntimeTests
 {
     [Serializable]
-    public struct ThirdPersonCharacterComponent : IComponentData
+    public struct TestCharacterComponent : IComponentData
     {
         public float RotationSharpness;
         public float GroundMaxSpeed;
@@ -21,9 +21,9 @@ namespace Unity.CharacterController.RuntimeTests
         public bool PreventAirAccelerationAgainstUngroundedHits;
         public BasicStepAndSlopeHandlingParameters StepAndSlopeHandling;
 
-        public static ThirdPersonCharacterComponent GetDefault()
+        public static TestCharacterComponent GetDefault()
         {
-            return new ThirdPersonCharacterComponent
+            return new TestCharacterComponent
             {
                 RotationSharpness = 25f,
                 GroundMaxSpeed = 10f,
@@ -40,7 +40,7 @@ namespace Unity.CharacterController.RuntimeTests
     }
 
     [Serializable]
-    public struct ThirdPersonCharacterControl : IComponentData
+    public struct TestCharacterControl : IComponentData
     {
         public float3 MoveVector;
         public bool Jump;

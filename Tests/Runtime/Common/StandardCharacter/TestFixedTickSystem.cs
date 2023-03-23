@@ -9,7 +9,7 @@ namespace Unity.CharacterController.RuntimeTests
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
     [BurstCompile]
-    public partial struct FixedTickSystem : ISystem
+    public partial struct TestFixedTickSystem : ISystem
     {
         public struct Singleton : IComponentData
         {

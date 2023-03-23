@@ -21,11 +21,11 @@ namespace Unity.CharacterController.RuntimeTests
         [Test]
         public void UpdateInitialize()
         {
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             
             ref KinematicCharacterBody characterBody = ref characterAspect.CharacterAspect.CharacterBody.ValueRW;
             DynamicBuffer<KinematicCharacterHit> characterHitsBuffer = characterAspect.CharacterAspect.CharacterHitsBuffer;
@@ -81,7 +81,7 @@ namespace Unity.CharacterController.RuntimeTests
         public void UpdateParentMovement()
         {
             Entity movingPlatformEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Kinematic, CollisionResponsePolicy.Collide, true);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(50f, 0f, 50f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(50f, 0f, 50f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             LocalTransform initialPlatformTransform = World.EntityManager.GetComponentData<LocalTransform>(movingPlatformEntity);
             LocalTransform initialCharacterTransform = World.EntityManager.GetComponentData<LocalTransform>(characterEntity);
@@ -100,7 +100,7 @@ namespace Unity.CharacterController.RuntimeTests
             CharacterTestUtils.StepPhysicsWorld(World, out physicsWorldSingleton);
             CharacterTestUtils.UpdateTrackedTransforms(World);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_ParentMovement(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position, characterAspect.CharacterAspect.CharacterBody.ValueRW.WasGroundedBeforeCharacterUpdate);
 
@@ -120,11 +120,11 @@ namespace Unity.CharacterController.RuntimeTests
         public void UpdateGrounding_FlatGround()
         {
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -144,11 +144,11 @@ namespace Unity.CharacterController.RuntimeTests
         [Test]
         public void UpdateGrounding_NoGround()
         {
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -167,12 +167,12 @@ namespace Unity.CharacterController.RuntimeTests
         {
             quaternion floorRotation = quaternion.Euler(math.radians(30f), 0f, 0f);
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), floorRotation, new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 50f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 50f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
             
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             CharacterTestUtils.MoveCharacterToClosestCollideableInDirection(World, characterEntity, physicsWorldSingleton, -math.up());
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -194,12 +194,12 @@ namespace Unity.CharacterController.RuntimeTests
         {
             quaternion floorRotation = quaternion.Euler(math.radians(70f), 0f, 0f);
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), floorRotation, new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 50f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 50f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
             
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             CharacterTestUtils.MoveCharacterToClosestCollideableInDirection(World, characterEntity, physicsWorldSingleton, -math.up());
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -218,12 +218,12 @@ namespace Unity.CharacterController.RuntimeTests
         public void UpdateGrounding_SlopePeak()
         {
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, 0f, 0f), quaternion.Euler(math.radians(45f), 0f, 0f), new float3(5f, 10f, 10f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 10f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 10f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             CharacterTestUtils.MoveCharacterToClosestCollideableInDirection(World, characterEntity, physicsWorldSingleton, -math.up());
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -249,12 +249,12 @@ namespace Unity.CharacterController.RuntimeTests
             stepAndSlopeHandlingParameters.MaxDownwardSlopeChangeAngle = math.radians(45f);
             
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             CharacterTestUtils.SetCharacterVelocity(World, characterEntity, math.forward() * 10f);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
             
@@ -274,12 +274,12 @@ namespace Unity.CharacterController.RuntimeTests
             stepAndSlopeHandlingParameters.HasMaxDownwardSlopeChangeAngle = false;
             
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(10f, 1f, 10f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 4.95f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 4.95f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             CharacterTestUtils.SetCharacterVelocity(World, characterEntity, math.forward() * 10f);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
             
@@ -301,12 +301,12 @@ namespace Unity.CharacterController.RuntimeTests
             
             float3 characterStartPosition = new float3(0f, 10f, -0.05f);
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, 0f, 0f), quaternion.Euler(math.radians(45f), 0f, 0f), new float3(5f, 10f, 10f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, characterStartPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, characterStartPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             CharacterTestUtils.MoveCharacterToClosestCollideableInDirection(World, characterEntity, physicsWorldSingleton, -math.up());
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
             
@@ -344,11 +344,11 @@ namespace Unity.CharacterController.RuntimeTests
             float pushForceMultiplier = 20f;
             
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(10f, 1f, 10f), BodyMotionType.Dynamic, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(5f, 0f, 5f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(5f, 0f, 5f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
             characterAspect.CharacterAspect.Update_GroundPushing(in characterAspect, ref context, ref baseContext, characterAspect.CharacterComponent.ValueRO.Gravity, pushForceMultiplier);
@@ -369,11 +369,11 @@ namespace Unity.CharacterController.RuntimeTests
             float pushForceMultiplier = 20f;
             
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(10f, 1f, 10f), BodyMotionType.Kinematic, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(5f, 0f, 5f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(5f, 0f, 5f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
             characterAspect.CharacterAspect.Update_GroundPushing(in characterAspect, ref context, ref baseContext, characterAspect.CharacterComponent.ValueRO.Gravity, pushForceMultiplier);
@@ -393,11 +393,11 @@ namespace Unity.CharacterController.RuntimeTests
         {
             float3 initialCharacterPosition = new float3(0f, 0f, 0f);
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -421,11 +421,11 @@ namespace Unity.CharacterController.RuntimeTests
             float3 initialCharacterPosition = new float3(0f, 0f, 0f);
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
             Entity obstacleEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, 0f, 5f), quaternion.Euler(math.radians(90f), 0f, 0f), new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -449,13 +449,13 @@ namespace Unity.CharacterController.RuntimeTests
         {
             float3 initialCharacterPosition = new float3(0f, 10f, 0f);
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.Euler(math.radians(-20f), 0f, 0f), new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             CharacterTestUtils.MoveCharacterToClosestCollideableInDirection(World, characterEntity, physicsWorldSingleton, -math.up());
             initialCharacterPosition = World.EntityManager.GetComponentData<LocalTransform>(characterEntity).Position;
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -484,15 +484,15 @@ namespace Unity.CharacterController.RuntimeTests
             float3 initialCharacterPosition = new float3(0f, 0f, 0f);
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
             Entity stepEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, 0f, 1.01f), quaternion.identity, new float3(1f, 1f, 1f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
-            ThirdPersonCharacterComponent characterComponent = World.EntityManager.GetComponentData<ThirdPersonCharacterComponent>(characterEntity);
+            TestCharacterComponent characterComponent = World.EntityManager.GetComponentData<TestCharacterComponent>(characterEntity);
             characterComponent.StepAndSlopeHandling = stepAndSlopeHandlingParameters;
             World.EntityManager.SetComponentData(characterEntity, characterComponent);
             
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -523,9 +523,9 @@ namespace Unity.CharacterController.RuntimeTests
             float3 initialCharacterPosition = new float3(0f, 0.5f, 0.5f);
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
             Entity stepEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, 0f, 0f), quaternion.identity, new float3(1f, 1f, 1f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
-            ThirdPersonCharacterComponent characterComponent = World.EntityManager.GetComponentData<ThirdPersonCharacterComponent>(characterEntity);
+            TestCharacterComponent characterComponent = World.EntityManager.GetComponentData<TestCharacterComponent>(characterEntity);
             characterComponent.StepAndSlopeHandling = stepAndSlopeHandlingParameters;
             World.EntityManager.SetComponentData(characterEntity, characterComponent);
             KinematicCharacterProperties characterProperties = World.EntityManager.GetComponentData<KinematicCharacterProperties>(characterEntity);
@@ -536,7 +536,7 @@ namespace Unity.CharacterController.RuntimeTests
             // Frame 1 --------------------------------------------------------------------------------------------------------------------------------
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -578,13 +578,13 @@ namespace Unity.CharacterController.RuntimeTests
             float3 initialCharacterPosition = new float3(-0.25f, 0.01f, -100f);
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
             Entity dynamicBoxEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, 1f, 0f), quaternion.Euler(0f, math.radians(45f), 0f), new float3(2f, 2f, 2f), BodyMotionType.Dynamic, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             CharacterTestUtils.MoveCharacterToClosestCollideableInDirection(World, characterEntity, physicsWorldSingleton, math.forward());
             initialCharacterPosition = World.EntityManager.GetComponentData<LocalTransform>(characterEntity).Position;
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
 
@@ -611,11 +611,11 @@ namespace Unity.CharacterController.RuntimeTests
         public void UpdateMovingPlatformDetection_NoTrackedTransform()
         {
             Entity movingPlatformEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Kinematic, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(10f, 0f, 10f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(10f, 0f, 10f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
             characterAspect.CharacterAspect.Update_MovingPlatformDetection(ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW);
@@ -630,11 +630,11 @@ namespace Unity.CharacterController.RuntimeTests
         public void UpdateMovingPlatformDetection_Kinematic()
         {
             Entity movingPlatformEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Kinematic, CollisionResponsePolicy.Collide, true);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(10f, 0f, 10f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(10f, 0f, 10f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
             characterAspect.CharacterAspect.Update_MovingPlatformDetection(ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW);
@@ -649,11 +649,11 @@ namespace Unity.CharacterController.RuntimeTests
         public void UpdateMovingPlatformDetection_Dynamic()
         {
             Entity movingPlatformEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Dynamic, CollisionResponsePolicy.Collide, true);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(10f, 0f, 10f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(10f, 0f, 10f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
             characterAspect.CharacterAspect.Update_MovingPlatformDetection(ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW);
@@ -668,7 +668,7 @@ namespace Unity.CharacterController.RuntimeTests
         public void UpdateParentMomentum_Linear()
         {
             Entity movingPlatformEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Kinematic, CollisionResponsePolicy.Collide, true);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0.01f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0.01f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             PhysicsVelocity movingPlatformVelocity = World.EntityManager.GetComponentData<PhysicsVelocity>(movingPlatformEntity);
             movingPlatformVelocity.Linear = math.forward() * 10f;
@@ -681,7 +681,7 @@ namespace Unity.CharacterController.RuntimeTests
             CharacterTestUtils.StepPhysicsWorld(World, out physicsWorldSingleton);
             CharacterTestUtils.UpdateTrackedTransforms(World);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_ParentMovement(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position, characterAspect.CharacterAspect.CharacterBody.ValueRW.WasGroundedBeforeCharacterUpdate);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
@@ -759,7 +759,7 @@ namespace Unity.CharacterController.RuntimeTests
         {
             float3 initialCharacterPosition = new float3(10f, 0.01f, 10f);
             Entity movingPlatformEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Kinematic, CollisionResponsePolicy.Collide, true);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, initialCharacterPosition, quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             PhysicsVelocity movingPlatformVelocity = World.EntityManager.GetComponentData<PhysicsVelocity>(movingPlatformEntity);
             movingPlatformVelocity.Angular = math.up() * math.radians(300f);
@@ -772,7 +772,7 @@ namespace Unity.CharacterController.RuntimeTests
             CharacterTestUtils.StepPhysicsWorld(World, out physicsWorldSingleton);
             CharacterTestUtils.UpdateTrackedTransforms(World);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_ParentMovement(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position, characterAspect.CharacterAspect.CharacterBody.ValueRW.WasGroundedBeforeCharacterUpdate);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
@@ -858,12 +858,12 @@ namespace Unity.CharacterController.RuntimeTests
         public void UpdateProcessStatefulCharacterHits()
         {
             Entity floorEntity = CharacterTestUtils.CreateBoxBody(World, new float3(0f, -0.5f, 0f), quaternion.identity, new float3(100f, 1f, 100f), BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
-            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault(), CollisionResponsePolicy.RaiseTriggerEvents);
+            Entity characterEntity = CharacterTestUtils.CreateCharacter(World, new float3(0f, 0f, 0f), quaternion.identity, 2f, 0.5f, AuthoringKinematicCharacterProperties.GetDefault());
 
             // Frame 1 --------------------------------------------------------------------------------------------------------------------------------
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
             
-            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            CharacterTestUtils.GetCharacterAspectWithContexts(World, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
             characterAspect.CharacterAspect.Update_Initialize(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, World.Time.DeltaTime);
             characterAspect.CharacterAspect.Update_Grounding(in characterAspect, ref context, ref baseContext, ref characterAspect.CharacterAspect.CharacterBody.ValueRW, ref characterAspect.CharacterAspect.LocalTransform.ValueRW.Position);
             characterAspect.CharacterAspect.Update_ProcessStatefulCharacterHits();

@@ -16,7 +16,6 @@ using CapsuleCollider = Unity.Physics.CapsuleCollider;
 using Collider = Unity.Physics.Collider;
 using Material = Unity.Physics.Material;
 using SphereCollider = Unity.Physics.SphereCollider;
-using ThirdPersonCharacterAspect = Unity.CharacterController.RuntimeTests.ThirdPersonCharacterAspect;
 
 namespace Unity.CharacterController.RuntimeTests
 {
@@ -43,13 +42,13 @@ namespace Unity.CharacterController.RuntimeTests
             }
         }
 
-        public static Entity CreateCharacter(World world, float3 position, quaternion rotation, float height, float radius, AuthoringKinematicCharacterProperties characterProperties, CollisionResponsePolicy collisionResponse)
+        public static Entity CreateCharacter(World world, float3 position, quaternion rotation, float height, float radius, AuthoringKinematicCharacterProperties characterProperties)
         {
-            Entity characterEntity = CreateCapsuleBody(world, position, rotation, height, radius, BodyMotionType.Static, collisionResponse, false);
+            Entity characterEntity = CreateCapsuleBody(world, position, rotation, height, radius, BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
             KinematicCharacterUtilities.CreateCharacter(world.EntityManager, characterEntity, characterProperties);
 
-            world.EntityManager.AddComponentData(characterEntity, ThirdPersonCharacterComponent.GetDefault());
-            world.EntityManager.AddComponentData(characterEntity, new ThirdPersonCharacterControl());
+            world.EntityManager.AddComponentData(characterEntity, TestCharacterComponent.GetDefault());
+            world.EntityManager.AddComponentData(characterEntity, new TestCharacterControl());
 
             return characterEntity;
         }
@@ -102,7 +101,6 @@ namespace Unity.CharacterController.RuntimeTests
 
                 world.EntityManager.AddComponentData(bodyEntity, new Simulate { });
                 world.EntityManager.AddComponentData(bodyEntity, new LocalTransform { Position = position, Rotation = rotation, Scale = 1f });
-                world.EntityManager.AddComponentData(bodyEntity, new WorldTransform { Position = position, Rotation = rotation, Scale = 1f });
                 world.EntityManager.AddComponentData(bodyEntity, new LocalToWorld { Value = float4x4.TRS(position, rotation, new float3(1f, 1f, 1f)) });
                 world.EntityManager.AddComponentData(bodyEntity, new PhysicsCollider { Value = collider });
                 world.EntityManager.AddSharedComponent(bodyEntity, new PhysicsWorldIndex { Value = worldIndex });
@@ -205,11 +203,11 @@ namespace Unity.CharacterController.RuntimeTests
             world.EntityManager.CompleteAllTrackedJobs();
         }
         
-        public static void GetCharacterAspectWithContexts(World world, Entity characterEntity, PhysicsWorldSingleton physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context)
+        public static void GetCharacterAspectWithContexts(World world, Entity characterEntity, PhysicsWorldSingleton physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context)
         {
             SimulationSystemGroup simulationSystem = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
 
-            context = new ThirdPersonCharacterUpdateContext();
+            context = new TestCharacterUpdateContext();
             context.OnSystemCreate(ref simulationSystem.CheckedStateRef);
             context.OnSystemUpdate(ref simulationSystem.CheckedStateRef);
             baseContext = new KinematicCharacterUpdateContext();
@@ -217,7 +215,7 @@ namespace Unity.CharacterController.RuntimeTests
             baseContext.OnSystemUpdate(ref simulationSystem.CheckedStateRef, world.Time, physicsWorldSingleton);
             baseContext.EnsureCreationOfTmpCollections();
 
-            characterAspect = world.EntityManager.GetAspect<ThirdPersonCharacterAspect>(characterEntity);
+            characterAspect = world.EntityManager.GetAspect<TestCharacterAspect>(characterEntity);
         }
 
         public static void DisposeCharacterContext(ref KinematicCharacterUpdateContext baseContext)
@@ -261,7 +259,7 @@ namespace Unity.CharacterController.RuntimeTests
 
         public static bool CastCharacterShapeClosest(World world, Entity characterEntity, PhysicsWorldSingleton physicsWorldSingleton, float3 castDirection, float castLength, out ColliderCastHit hit, out float hitDistance)
         {
-            GetCharacterAspectWithContexts(world, characterEntity, physicsWorldSingleton, out ThirdPersonCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out ThirdPersonCharacterUpdateContext context);
+            GetCharacterAspectWithContexts(world, characterEntity, physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context);
 
             bool foundHit = characterAspect.CharacterAspect.CastColliderClosestCollisions(
                 in characterAspect,

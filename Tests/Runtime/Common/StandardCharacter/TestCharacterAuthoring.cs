@@ -10,19 +10,21 @@ namespace Unity.CharacterController.RuntimeTests
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(PhysicsShapeAuthoring))]
-    public class ThirdPersonCharacterAuthoring : MonoBehaviour
+    public class TestCharacterAuthoring : MonoBehaviour
     {
         public AuthoringKinematicCharacterProperties CharacterProperties = AuthoringKinematicCharacterProperties.GetDefault();
-        public ThirdPersonCharacterComponent Character = ThirdPersonCharacterComponent.GetDefault();
+        public TestCharacterComponent Character = TestCharacterComponent.GetDefault();
 
-        public class Baker : Baker<ThirdPersonCharacterAuthoring>
+        public class Baker : Baker<TestCharacterAuthoring>
         {
-            public override void Bake(ThirdPersonCharacterAuthoring authoring)
+            public override void Bake(TestCharacterAuthoring authoring)
             {
                 KinematicCharacterUtilities.BakeCharacter(this, authoring, authoring.CharacterProperties);
 
-                AddComponent(authoring.Character);
-                AddComponent(new ThirdPersonCharacterControl());
+                Entity selfEntity = GetEntity(TransformUsageFlags.None);
+                
+                AddComponent(selfEntity, authoring.Character);
+                AddComponent(selfEntity, new TestCharacterControl());
             }
         }
     }

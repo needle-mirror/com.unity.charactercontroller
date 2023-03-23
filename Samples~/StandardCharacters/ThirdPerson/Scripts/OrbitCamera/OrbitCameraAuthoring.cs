@@ -18,15 +18,17 @@ public class OrbitCameraAuthoring : MonoBehaviour
             authoring.OrbitCamera.CurrentDistanceFromObstruction = authoring.OrbitCamera.TargetDistance;
             authoring.OrbitCamera.PlanarForward = -math.forward();
 
-            AddComponent(authoring.OrbitCamera);
-            AddComponent(new OrbitCameraControl());
-            DynamicBuffer<OrbitCameraIgnoredEntityBufferElement> ignoredEntitiesBuffer = AddBuffer<OrbitCameraIgnoredEntityBufferElement>();
+            Entity entity = GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
+            
+            AddComponent(entity, authoring.OrbitCamera);
+            AddComponent(entity, new OrbitCameraControl());
+            DynamicBuffer<OrbitCameraIgnoredEntityBufferElement> ignoredEntitiesBuffer = AddBuffer<OrbitCameraIgnoredEntityBufferElement>(entity);
 
             for (int i = 0; i < authoring.IgnoredEntities.Count; i++)
             {
                 ignoredEntitiesBuffer.Add(new OrbitCameraIgnoredEntityBufferElement
                 {
-                    Entity = GetEntity(authoring.IgnoredEntities[i]),
+                    Entity = GetEntity(authoring.IgnoredEntities[i], TransformUsageFlags.None),
                 });
             }
         }

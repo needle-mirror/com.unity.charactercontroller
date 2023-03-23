@@ -11,12 +11,13 @@ public class FirstPersonPlayerAuthoring : MonoBehaviour
     {
         public override void Bake(FirstPersonPlayerAuthoring authoring)
         {
-            AddComponent(new FirstPersonPlayer
+            Entity entity = GetEntity(TransformUsageFlags.None);
+            AddComponent(entity, new FirstPersonPlayer
             {
-                ControlledCharacter = GetEntity(authoring.ControlledCharacter),
+                ControlledCharacter = GetEntity(authoring.ControlledCharacter, TransformUsageFlags.Dynamic),
                 MouseSensitivity = authoring.MouseSensitivity,
             });
-            AddComponent(new FirstPersonPlayerInputs());
+            AddComponent(entity, new FirstPersonPlayerInputs());
         }
     }
 }

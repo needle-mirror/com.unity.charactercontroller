@@ -21,10 +21,12 @@ public class FirstPersonCharacterAuthoring : MonoBehaviour
         {
             KinematicCharacterUtilities.BakeCharacter(this, authoring, authoring.CharacterProperties);
 
-            authoring.Character.ViewEntity = GetEntity(authoring.ViewEntity);
+            authoring.Character.ViewEntity = GetEntity(authoring.ViewEntity, TransformUsageFlags.Dynamic);
         
-            AddComponent(authoring.Character);
-            AddComponent(new FirstPersonCharacterControl());
+            Entity entity = GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
+            
+            AddComponent(entity, authoring.Character);
+            AddComponent(entity, new FirstPersonCharacterControl());
         }
     }
 }
