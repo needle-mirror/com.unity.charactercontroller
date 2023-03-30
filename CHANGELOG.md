@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0-exp.5] - 2023-03-30
+
+### Fixed
+
+* Fixed an error occuring when the Havok package is present in the project
+
+
 ## [1.0.0-exp.4] - 2023-03-23
 
 ### Upgrade guide
