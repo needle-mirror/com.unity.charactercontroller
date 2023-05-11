@@ -1,13 +1,13 @@
 {
   "name": "com.unity.charactercontroller",
   "displayName": "Character Controller",
-  "version": "1.0.0-exp.5",
+  "version": "1.0.0-exp.22",
   "unity": "2022.2",
-  "unityRelease": "2f1",
+  "unityRelease": "15f1",
   "description": "This package provides a customizable character controller solution for Entities. \n\n Navigate to the \"Samples\" tab in order to download the \"Standard Characters\", which serve as a starting point for implementing your own characters.",
   "dependencies": {
-    "com.unity.entities": "1.0.0-pre.65",
-    "com.unity.physics": "1.0.0-pre.65",
+    "com.unity.entities": "1.0.8",
+    "com.unity.physics": "1.0.8",
     "com.unity.modules.uielements": "1.0.0",
     "com.unity.modules.physics": "1.0.0"
   },
@@ -26,15 +26,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n* Fixed an error occuring when the Havok package is present in the project"
+    "changelog": "### Changed\n\n* Character aspects are no longer passed by ref in standard character jobs\n* Removed all reliance on `PhysicsBodyAuthoring` and `PhysicsShapeAuthoring` components\n* `DisableCharacterDynamicPairsSystem` was renamed to `DisableCharacterDynamicContactsSystem`\n\n### Fixed\n\n* Characters can now raise trigger events with trigger shapes that are on dynamic rigidbodies"
   },
   "upmCi": {
-    "footprint": "7efc1b3614503720f31f199d43878945bdcf6510"
+    "footprint": "a50e5410b3cdb6e171b5b8b08fc511914fa9f78d"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.charactercontroller@1.0/manual/index.html",
   "repository": {
-    "url": "https://github.cds.internal.unity3d.com/unity/com.unity.charactercontroller.git",
+    "url": "https://github.cds.internal.unity3d.com/unity/dots.git",
     "type": "git",
-    "revision": "f53b9533586bd5d0e33221b65ff0816cdf63f2a3"
+    "revision": "5e46003941c49ce3a0624853964873a15ae7b9ae"
   }
 }

@@ -62,7 +62,7 @@ namespace Unity.CharacterController.RuntimeTests
             public TestCharacterUpdateContext Context;
             public KinematicCharacterUpdateContext BaseContext;
 
-            void Execute(ref TestCharacterAspect characterAspect)
+            void Execute(TestCharacterAspect characterAspect)
             {
                 characterAspect.PhysicsUpdate(ref Context, ref BaseContext);
             }
@@ -130,7 +130,7 @@ namespace Unity.CharacterController.RuntimeTests
             public TestCharacterUpdateContext Context;
             public KinematicCharacterUpdateContext BaseContext;
 
-            void Execute(ref TestCharacterAspect characterAspect)
+            void Execute(TestCharacterAspect characterAspect)
             {
                 characterAspect.VariableUpdate(ref Context, ref BaseContext);
             }

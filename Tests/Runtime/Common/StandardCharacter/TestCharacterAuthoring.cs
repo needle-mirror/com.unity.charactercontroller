@@ -9,7 +9,6 @@ using UnityEngine.Serialization;
 namespace Unity.CharacterController.RuntimeTests
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(PhysicsShapeAuthoring))]
     public class TestCharacterAuthoring : MonoBehaviour
     {
         public AuthoringKinematicCharacterProperties CharacterProperties = AuthoringKinematicCharacterProperties.GetDefault();
@@ -22,7 +21,7 @@ namespace Unity.CharacterController.RuntimeTests
                 KinematicCharacterUtilities.BakeCharacter(this, authoring, authoring.CharacterProperties);
 
                 Entity selfEntity = GetEntity(TransformUsageFlags.None);
-                
+
                 AddComponent(selfEntity, authoring.Character);
                 AddComponent(selfEntity, new TestCharacterControl());
             }

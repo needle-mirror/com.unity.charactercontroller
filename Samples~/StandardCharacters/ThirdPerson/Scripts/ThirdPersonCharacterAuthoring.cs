@@ -7,7 +7,6 @@ using Unity.Physics;
 using UnityEngine.Serialization;
 
 [DisallowMultipleComponent]
-[RequireComponent(typeof(PhysicsShapeAuthoring))]
 public class ThirdPersonCharacterAuthoring : MonoBehaviour
 {
     public AuthoringKinematicCharacterProperties CharacterProperties = AuthoringKinematicCharacterProperties.GetDefault();
@@ -20,7 +19,7 @@ public class ThirdPersonCharacterAuthoring : MonoBehaviour
             KinematicCharacterUtilities.BakeCharacter(this, authoring, authoring.CharacterProperties);
 
             Entity entity = GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
-            
+
             AddComponent(entity, authoring.Character);
             AddComponent(entity, new ThirdPersonCharacterControl());
         }

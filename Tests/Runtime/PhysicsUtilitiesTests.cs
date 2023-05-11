@@ -24,38 +24,38 @@ namespace Unity.CharacterController.RuntimeTests
 			Entity bodyStatic = CharacterTestUtils.CreateSphereBody(World, default, quaternion.identity, 1f, BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
 			Entity bodyDynamic = CharacterTestUtils.CreateSphereBody(World, default, quaternion.identity, 1f, BodyMotionType.Dynamic, CollisionResponsePolicy.Collide, false);
 			Entity bodyKinematic = CharacterTestUtils.CreateSphereBody(World, default, quaternion.identity, 1f, BodyMotionType.Kinematic, CollisionResponsePolicy.Collide, false);
-			
+
 			CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
-			
+
 			Assert.IsFalse(PhysicsUtilities.DoesBodyHavePhysicsVelocityAndMass(in physicsWorldSingleton.PhysicsWorld, physicsWorldSingleton.PhysicsWorld.GetRigidBodyIndex(bodyStatic)));
 			Assert.IsTrue(PhysicsUtilities.DoesBodyHavePhysicsVelocityAndMass(in physicsWorldSingleton.PhysicsWorld, physicsWorldSingleton.PhysicsWorld.GetRigidBodyIndex(bodyDynamic)));
 			Assert.IsTrue(PhysicsUtilities.DoesBodyHavePhysicsVelocityAndMass(in physicsWorldSingleton.PhysicsWorld, physicsWorldSingleton.PhysicsWorld.GetRigidBodyIndex(bodyKinematic)));
 		}
-		
+
 		[Test]
 		public void IsBodyDynamic()
 		{
 			Entity bodyStatic = CharacterTestUtils.CreateSphereBody(World, default, quaternion.identity, 1f, BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
 			Entity bodyDynamic = CharacterTestUtils.CreateSphereBody(World, default, quaternion.identity, 1f, BodyMotionType.Dynamic, CollisionResponsePolicy.Collide, false);
 			Entity bodyKinematic = CharacterTestUtils.CreateSphereBody(World, default, quaternion.identity, 1f, BodyMotionType.Kinematic, CollisionResponsePolicy.Collide, false);
-			
+
 			CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
-			
+
 			Assert.IsFalse(PhysicsUtilities.IsBodyDynamic(in physicsWorldSingleton.PhysicsWorld, physicsWorldSingleton.PhysicsWorld.GetRigidBodyIndex(bodyStatic)));
 			Assert.IsTrue(PhysicsUtilities.IsBodyDynamic(in physicsWorldSingleton.PhysicsWorld, physicsWorldSingleton.PhysicsWorld.GetRigidBodyIndex(bodyDynamic)));
 			Assert.IsFalse(PhysicsUtilities.IsBodyDynamic(in physicsWorldSingleton.PhysicsWorld, physicsWorldSingleton.PhysicsWorld.GetRigidBodyIndex(bodyKinematic)));
 		}
-		
+
 		[Test]
 		public unsafe void HasPhysicsTag()
 		{
-			void SetTagsM(ref CustomPhysicsMaterialTags tags, bool t0, bool t1, bool t2, bool t3, bool t4, bool t5, bool t6, bool t7)
+			void SetTagsM(ref PhysicsCustomTags tags, bool t0, bool t1, bool t2, bool t3, bool t4, bool t5, bool t6, bool t7)
 			{
 				byte values = tags.Value;
 				SetTags(ref values, t0, t1, t2, t3, t4, t5, t6, t7);
 				tags.Value = values;
 			}
-			
+
 			void SetTags(ref byte tags, bool t0, bool t1, bool t2, bool t3, bool t4, bool t5, bool t6, bool t7)
 			{
 				int tmpTags = 0;
@@ -77,85 +77,85 @@ namespace Unity.CharacterController.RuntimeTests
 				Material collMaterial = sphereCollider->Material;
 				SetTags(ref collMaterial.CustomTags, t0, t1, t2, t3, t4, t5, t6, t7);
 				sphereCollider->Material = collMaterial;
-				
+
 				CharacterTestUtils.BuildPhysicsWorld(World, out physicsWorldSingleton);
-				
+
 				tmpHits.Clear();
 				physicsWorldSingleton.OverlapSphere(default, 100f, ref tmpHits, CollisionFilter.Default, QueryInteraction.Default);
 				Assert.AreEqual(1, tmpHits.Length);
 
 				hitMaterial = tmpHits[0].Material;
 			}
-			
+
 			NativeList<DistanceHit> tmpHits = new NativeList<DistanceHit>(100, Allocator.Temp);
 			Entity bodyA = CharacterTestUtils.CreateSphereBody(World, default, quaternion.identity, 1f, BodyMotionType.Kinematic, CollisionResponsePolicy.Collide, false);
-			CustomPhysicsMaterialTags hasTag = CustomPhysicsMaterialTags.Nothing;
+            PhysicsCustomTags hasTag = default;
 			Material bodyMaterial = default;
 			CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
 
 			// --------------------------------------------------------------------------------------
-			
-			SetTagsM(ref hasTag, false, false, false, false, false, false, false, false); 
+
+			SetTagsM(ref hasTag, false, false, false, false, false, false, false, false);
 			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,false, false, false, false, false, false, false, false, out bodyMaterial);
 			Assert.IsTrue(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
 
 			// --------------------------------------------------------------------------------------
-			
-			SetTagsM(ref hasTag, true, true, true, true, true, true, true, true); 
+
+			SetTagsM(ref hasTag, true, true, true, true, true, true, true, true);
 			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,false, false, false, false, false, false, false, false, out bodyMaterial);
 			Assert.IsFalse(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
-			
+
 			// --------------------------------------------------------------------------------------
-			
-			SetTagsM(ref hasTag, false, false, false, false, false, false, false, false); 
+
+			SetTagsM(ref hasTag, false, false, false, false, false, false, false, false);
 			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,true, true, true, true, true, true, true, true, out bodyMaterial);
 			Assert.IsTrue(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
-			
+
 			// --------------------------------------------------------------------------------------
-			 
-			SetTagsM(ref hasTag, true, true, true, true, true, true, true, true); 
-			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,true, true, true, true, true, true, true, true, out bodyMaterial); 
+
+			SetTagsM(ref hasTag, true, true, true, true, true, true, true, true);
+			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,true, true, true, true, true, true, true, true, out bodyMaterial);
 			Assert.IsTrue(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
-			
+
 			// --------------------------------------------------------------------------------------
-			
-			SetTagsM(ref hasTag, true, false, false, false, false, false, false, false); 
+
+			SetTagsM(ref hasTag, true, false, false, false, false, false, false, false);
 			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,false, false, false, false, false, false, false, false, out bodyMaterial);
 			Assert.IsFalse(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
-			
+
 			// --------------------------------------------------------------------------------------
-			
-			SetTagsM(ref hasTag, false, false, false, false, false, false, false, false); 
+
+			SetTagsM(ref hasTag, false, false, false, false, false, false, false, false);
 			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,true, false, false, false, false, false, false, false, out bodyMaterial);
 			Assert.IsTrue(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
-			
+
 			// --------------------------------------------------------------------------------------
-			
-			SetTagsM(ref hasTag, true, false, false, false, false, false, false, false); 
+
+			SetTagsM(ref hasTag, true, false, false, false, false, false, false, false);
 			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,true, false, false, false, false, false, false, false, out bodyMaterial);
 			Assert.IsTrue(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
-			
+
 			// --------------------------------------------------------------------------------------
-			
-			SetTagsM(ref hasTag, false, false, false, true, false, false, false, false); 
+
+			SetTagsM(ref hasTag, false, false, false, true, false, false, false, false);
 			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,false, false, false, false, true, false, false, false, out bodyMaterial);
 			Assert.IsFalse(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
-			
+
 			// --------------------------------------------------------------------------------------
-			
-			SetTagsM(ref hasTag, false, false, false, true, true, false, false, false); 
+
+			SetTagsM(ref hasTag, false, false, false, true, true, false, false, false);
 			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,false, false, false, false, true, false, false, false, out bodyMaterial);
 			Assert.IsFalse(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
-			
+
 			// --------------------------------------------------------------------------------------
-			
-			SetTagsM(ref hasTag, false, false, false, false, true, false, false, false); 
+
+			SetTagsM(ref hasTag, false, false, false, false, true, false, false, false);
 			SetTagsOnEntityAndUpdate(bodyA, ref tmpHits, ref physicsWorldSingleton,false, false, false, true, true, false, false, false, out bodyMaterial);
 			Assert.IsTrue(PhysicsUtilities.HasPhysicsTag(bodyMaterial, hasTag));
-			
+
 			tmpHits.Dispose();
 		}
-		
+
 		[Test]
 		public unsafe void GetBodyComponents()
 		{
@@ -177,29 +177,29 @@ namespace Unity.CharacterController.RuntimeTests
 			PhysicsMass massD = World.EntityManager.GetComponentData<PhysicsMass>(bodyD);
 			massD.InverseMass = 5f;
 			World.EntityManager.SetComponentData(bodyD, massD);
-			
+
 			CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
 			bool result = false;
-			
+
 			result = PhysicsUtilities.GetBodyComponents(in physicsWorldSingleton.PhysicsWorld, physicsWorldSingleton.GetRigidBodyIndex(bodyA), out LocalTransform transform, out PhysicsVelocity physicsVelocity, out PhysicsMass physicsMass);
 			Assert.IsFalse(result);
-			
+
 			result = PhysicsUtilities.GetBodyComponents(in physicsWorldSingleton.PhysicsWorld, physicsWorldSingleton.GetRigidBodyIndex(bodyB), out transform, out physicsVelocity, out physicsMass);
 			Assert.IsFalse(result);
-			
+
 			result = PhysicsUtilities.GetBodyComponents(in physicsWorldSingleton.PhysicsWorld, physicsWorldSingleton.GetRigidBodyIndex(bodyC), out transform, out physicsVelocity, out physicsMass);
 			Assert.IsTrue(result);
 			Assert.IsTrue(transform.Position.IsRoughlyEqual(math.up()));
 			Assert.IsTrue(physicsVelocity.Linear.IsRoughlyEqual(math.right()));
 			Assert.IsTrue(physicsMass.InverseMass.IsRoughlyEqual(5f));
-			
+
 			result = PhysicsUtilities.GetBodyComponents(in physicsWorldSingleton.PhysicsWorld, physicsWorldSingleton.GetRigidBodyIndex(bodyD), out transform, out physicsVelocity, out physicsMass);
 			Assert.IsTrue(result);
 			Assert.IsTrue(transform.Position.IsRoughlyEqual(math.up()));
 			Assert.IsTrue(physicsVelocity.Linear.IsRoughlyEqual(math.right()));
 			Assert.IsTrue(physicsMass.InverseMass.IsRoughlyEqual(5f));
 		}
-		
+
 		[Test]
 		public unsafe void IsCollidable()
 		{
@@ -207,9 +207,9 @@ namespace Unity.CharacterController.RuntimeTests
 			Entity bodyB = CharacterTestUtils.CreateSphereBody(World, math.up(), quaternion.identity, 1f, BodyMotionType.Static, CollisionResponsePolicy.RaiseTriggerEvents, false);
 			Entity bodyC = CharacterTestUtils.CreateSphereBody(World, math.up(), quaternion.identity, 1f, BodyMotionType.Static, CollisionResponsePolicy.Collide, false);
 			Entity bodyD = CharacterTestUtils.CreateSphereBody(World, math.up(), quaternion.identity, 1f, BodyMotionType.Static, CollisionResponsePolicy.CollideRaiseCollisionEvents, false);
-			
+
 			CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
-			
+
 
 			ConvexCollider* convCollider = (ConvexCollider*)World.EntityManager.GetComponentData<PhysicsCollider>(bodyA).ColliderPtr;
 			Assert.IsFalse(PhysicsUtilities.IsCollidable(convCollider->Material));
@@ -223,31 +223,31 @@ namespace Unity.CharacterController.RuntimeTests
 			convCollider = (ConvexCollider*)World.EntityManager.GetComponentData<PhysicsCollider>(bodyD).ColliderPtr;
 			Assert.IsTrue(PhysicsUtilities.IsCollidable(convCollider->Material));
 		}
-		
+
 		[Test]
 		public unsafe void SetCollisionResponse()
 		{
 			NativeList<DistanceHit> tmpHits = new NativeList<DistanceHit>(100, Allocator.Temp);
-			
+
 			Entity bodyA = CharacterTestUtils.CreateSphereBody(World, math.up(), quaternion.identity, 1f, BodyMotionType.Static, CollisionResponsePolicy.None, false);
 
 			CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physicsWorldSingleton);
-			
+
 			tmpHits.Clear();
 			physicsWorldSingleton.OverlapSphere(default, 100f, ref tmpHits, CollisionFilter.Default, QueryInteraction.Default);
 			Assert.AreEqual(1, tmpHits.Length);
-			
+
 			Collider* collPtr = (Collider*)physicsWorldSingleton.Bodies[tmpHits[0].RigidBodyIndex].Collider.GetUnsafePtr();
-			
+
 			PhysicsUtilities.SetCollisionResponse(physicsWorldSingleton.Bodies[tmpHits[0].RigidBodyIndex], CollisionResponsePolicy.RaiseTriggerEvents);
 			Assert.IsTrue(collPtr->GetCollisionResponse() == CollisionResponsePolicy.RaiseTriggerEvents);
-			
+
 			PhysicsUtilities.SetCollisionResponse(physicsWorldSingleton.Bodies[tmpHits[0].RigidBodyIndex], tmpHits[0].ColliderKey, CollisionResponsePolicy.Collide);
 			Assert.IsTrue(collPtr->GetCollisionResponse(tmpHits[0].ColliderKey) == CollisionResponsePolicy.Collide);
 
 			tmpHits.Dispose();
 		}
-		
+
 		[Test]
 		public void SolveCollisionImpulses()
 		{
@@ -260,18 +260,18 @@ namespace Unity.CharacterController.RuntimeTests
 			RigidTransform transformB = new RigidTransform { pos = -math.right(), rot = quaternion.identity };
 			float3 collisionPoint = new float3(0f);
 			float3 normalBToA = new float3(1f, 0f, 0f);
-			
+
 			PhysicsUtilities.SolveCollisionImpulses(velA, velB, massA, massB, transformA, transformB, collisionPoint, normalBToA, out float3 impulseOnA, out float3 impulseOnB);
-			
-			// If A and B have same mass and equal opposite speeds, the impulse on A of mass 1f would cancel out its velocity 
+
+			// If A and B have same mass and equal opposite speeds, the impulse on A of mass 1f would cancel out its velocity
 			Assert.IsTrue(impulseOnA.IsRoughlyEqual(-impulseOnB));
 			Assert.IsTrue(impulseOnA.IsRoughlyEqual(math.right() * 10f));
-			
+
 			massA = PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1f);
 			massB = PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 2f);
-			
+
 			PhysicsUtilities.SolveCollisionImpulses(velA, velB, massA, massB, transformA, transformB, collisionPoint, normalBToA, out impulseOnA, out impulseOnB);
-			
+
 			// If A has mass 1f and B has mass 2f, and both have equal opposite speeds...
 			// ...the total mass is 3f, and the total collision velocity is 20f...
 			// ...B's velocity changes by 1/3 of this, and A's velocity changes by 2/3 of this...
@@ -280,7 +280,7 @@ namespace Unity.CharacterController.RuntimeTests
 			Assert.IsTrue(impulseOnA.IsRoughlyEqual(-impulseOnB));
 			Assert.IsTrue(impulseOnA.IsRoughlyEqual(math.right() * ((2f/3f) * 20f)));
 		}
-		
+
 		[Test]
 		public void GetKinematicCharacterPhysicsMass()
 		{
@@ -309,7 +309,7 @@ namespace Unity.CharacterController.RuntimeTests
 			PhysicsMass massPropsB = PhysicsUtilities.GetKinematicCharacterPhysicsMass(propsB);
 			PhysicsMass massStoredPropsA = PhysicsUtilities.GetKinematicCharacterPhysicsMass(storedPropsA);
 			PhysicsMass massStoredPropsB = PhysicsUtilities.GetKinematicCharacterPhysicsMass(storedPropsB);
-			
+
 			Assert.IsTrue(massPropsA.InverseMass.IsRoughlyEqual(1f/2f));
 			Assert.IsTrue(massPropsB.InverseMass.IsRoughlyEqual(0f));
 			Assert.IsTrue(massStoredPropsA.InverseMass.IsRoughlyEqual(1f/4f));

@@ -43,7 +43,7 @@ public partial struct ThirdPersonCharacterPhysicsUpdateSystem : ISystem
     {
         _context.OnSystemUpdate(ref state);
         _baseContext.OnSystemUpdate(ref state, SystemAPI.Time, SystemAPI.GetSingleton<PhysicsWorldSingleton>());
-        
+
         ThirdPersonCharacterPhysicsUpdateJob job = new ThirdPersonCharacterPhysicsUpdateJob
         {
             Context = _context,
@@ -58,8 +58,8 @@ public partial struct ThirdPersonCharacterPhysicsUpdateSystem : ISystem
     {
         public ThirdPersonCharacterUpdateContext Context;
         public KinematicCharacterUpdateContext BaseContext;
-    
-        void Execute(ref ThirdPersonCharacterAspect characterAspect)
+
+        void Execute(ThirdPersonCharacterAspect characterAspect)
         {
             characterAspect.PhysicsUpdate(ref Context, ref BaseContext);
         }
@@ -96,7 +96,7 @@ public partial struct ThirdPersonCharacterVariableUpdateSystem : ISystem
         _context.OnSystemCreate(ref state);
         _baseContext = new KinematicCharacterUpdateContext();
         _baseContext.OnSystemCreate(ref state);
-        
+
         state.RequireForUpdate(_characterQuery);
     }
 
@@ -109,7 +109,7 @@ public partial struct ThirdPersonCharacterVariableUpdateSystem : ISystem
     {
         _context.OnSystemUpdate(ref state);
         _baseContext.OnSystemUpdate(ref state, SystemAPI.Time, SystemAPI.GetSingleton<PhysicsWorldSingleton>());
-        
+
         ThirdPersonCharacterVariableUpdateJob job = new ThirdPersonCharacterVariableUpdateJob
         {
             Context = _context,
@@ -124,8 +124,8 @@ public partial struct ThirdPersonCharacterVariableUpdateSystem : ISystem
     {
         public ThirdPersonCharacterUpdateContext Context;
         public KinematicCharacterUpdateContext BaseContext;
-    
-        void Execute(ref ThirdPersonCharacterAspect characterAspect)
+
+        void Execute(ThirdPersonCharacterAspect characterAspect)
         {
             characterAspect.VariableUpdate(ref Context, ref BaseContext);
         }

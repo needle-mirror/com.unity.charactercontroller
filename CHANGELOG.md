@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.0-exp.22] - 2023-05-11
+
+### Changed
+
+* Character aspects are no longer passed by ref in standard character jobs
+* Removed all reliance on `PhysicsBodyAuthoring` and `PhysicsShapeAuthoring` components
+* `DisableCharacterDynamicPairsSystem` was renamed to `DisableCharacterDynamicContactsSystem`
+
+### Fixed
+
+* Characters can now raise trigger events with trigger shapes that are on dynamic rigidbodies 
+
+
 ## [1.0.0-exp.5] - 2023-03-30
 
 ### Fixed

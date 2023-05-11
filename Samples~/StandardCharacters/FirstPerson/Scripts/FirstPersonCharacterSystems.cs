@@ -24,7 +24,7 @@ public partial struct FirstPersonCharacterPhysicsUpdateSystem : ISystem
                 FirstPersonCharacterComponent,
                 FirstPersonCharacterControl>()
             .Build(ref state);
-        
+
         _context = new FirstPersonCharacterUpdateContext();
         _context.OnSystemCreate(ref state);
         _baseContext = new KinematicCharacterUpdateContext();
@@ -43,7 +43,7 @@ public partial struct FirstPersonCharacterPhysicsUpdateSystem : ISystem
     {
         _context.OnSystemUpdate(ref state);
         _baseContext.OnSystemUpdate(ref state, SystemAPI.Time, SystemAPI.GetSingleton<PhysicsWorldSingleton>());
-        
+
         FirstPersonCharacterPhysicsUpdateJob job = new FirstPersonCharacterPhysicsUpdateJob
         {
             Context = _context,
@@ -58,8 +58,8 @@ public partial struct FirstPersonCharacterPhysicsUpdateSystem : ISystem
     {
         public FirstPersonCharacterUpdateContext Context;
         public KinematicCharacterUpdateContext BaseContext;
-    
-        void Execute(ref FirstPersonCharacterAspect characterAspect)
+
+        void Execute(FirstPersonCharacterAspect characterAspect)
         {
             characterAspect.PhysicsUpdate(ref Context, ref BaseContext);
         }
@@ -92,7 +92,7 @@ public partial struct FirstPersonCharacterVariableUpdateSystem : ISystem
                 FirstPersonCharacterComponent,
                 FirstPersonCharacterControl>()
             .Build(ref state);
-        
+
         _context = new FirstPersonCharacterUpdateContext();
         _context.OnSystemCreate(ref state);
         _baseContext = new KinematicCharacterUpdateContext();
@@ -110,14 +110,14 @@ public partial struct FirstPersonCharacterVariableUpdateSystem : ISystem
     {
         _context.OnSystemUpdate(ref state);
         _baseContext.OnSystemUpdate(ref state, SystemAPI.Time, SystemAPI.GetSingleton<PhysicsWorldSingleton>());
-        
+
         FirstPersonCharacterVariableUpdateJob variableUpdateJob = new FirstPersonCharacterVariableUpdateJob
         {
             Context = _context,
             BaseContext = _baseContext,
         };
         variableUpdateJob.ScheduleParallel();
-        
+
         FirstPersonCharacterViewJob viewJob = new FirstPersonCharacterViewJob
         {
             FirstPersonCharacterLookup = SystemAPI.GetComponentLookup<FirstPersonCharacterComponent>(true),
@@ -131,8 +131,8 @@ public partial struct FirstPersonCharacterVariableUpdateSystem : ISystem
     {
         public FirstPersonCharacterUpdateContext Context;
         public KinematicCharacterUpdateContext BaseContext;
-    
-        void Execute(ref FirstPersonCharacterAspect characterAspect)
+
+        void Execute(FirstPersonCharacterAspect characterAspect)
         {
             characterAspect.VariableUpdate(ref Context, ref BaseContext);
         }
@@ -151,7 +151,7 @@ public partial struct FirstPersonCharacterVariableUpdateSystem : ISystem
     [WithAll(typeof(Simulate))]
     public partial struct FirstPersonCharacterViewJob : IJobEntity
     {
-        [ReadOnly] 
+        [ReadOnly]
         public ComponentLookup<FirstPersonCharacterComponent> FirstPersonCharacterLookup;
 
         void Execute(ref LocalTransform localTransform, in FirstPersonCharacterView characterView)

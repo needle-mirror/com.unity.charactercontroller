@@ -110,13 +110,8 @@ namespace Unity.CharacterController
         /// <param name="tag"> The physics material tag to check for </param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool HasPhysicsTag(Material hitMaterial, CustomPhysicsMaterialTags tag)
+        public static bool HasPhysicsTag(Material hitMaterial, PhysicsCustomTags tag)
         {
-            // if ((hitMaterial.CustomTags & tag.Value) > 0 || 
-            //     hitMaterial.CustomTags == tag.Value) // in case both are 0
-            // {
-            //     return true;
-            // }
             if ((hitMaterial.CustomTags & tag.Value) == tag.Value)
             {
                 return true;
@@ -147,13 +142,13 @@ namespace Unity.CharacterController
                     Rotation = rigidbody.WorldFromBody.rot,
                     Scale = rigidbody.Scale,
                 };
-                
+
                 physicsVelocity = new PhysicsVelocity
                 {
                     Linear = motionVelocity.LinearVelocity,
                     Angular = motionVelocity.AngularVelocity,
                 };
-                
+
                 physicsMass = new PhysicsMass
                 {
                     Transform = motionData.BodyFromMotion,
@@ -189,7 +184,7 @@ namespace Unity.CharacterController
         }
 
         /// <summary>
-        /// Sets a collider's collision response 
+        /// Sets a collider's collision response
         /// </summary>
         /// <param name="rigidBody"> The rigidbody to change </param>
         /// <param name="colliderKey"> The collider key representing the collider to change </param>
@@ -203,12 +198,12 @@ namespace Unity.CharacterController
                 leafCollider.Collider->SetCollisionResponse(collisionResponse);
                 return true;
             }
-            
+
             return false;
         }
 
         /// <summary>
-        /// Sets a collider's collision response 
+        /// Sets a collider's collision response
         /// </summary>
         /// <param name="rigidBody"> The rigidbody to change </param>
         /// <param name="collisionResponse"> The desired collision response </param>

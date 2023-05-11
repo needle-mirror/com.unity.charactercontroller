@@ -210,7 +210,7 @@ namespace Unity.CharacterController
         {
             return new EntityQueryBuilder(Allocator.Temp)
                 .WithAll<
-                    LocalTransform, 
+                    LocalTransform,
                     PhysicsCollider,
                     PhysicsVelocity,
                     PhysicsMass,
@@ -329,16 +329,16 @@ namespace Unity.CharacterController
                 UnityEngine.Debug.LogError("ERROR: kinematic character objects do not support having a scale other than (1,1,1). Conversion will be aborted");
                 return;
             }
-            if (authoring.gameObject.GetComponent<PhysicsBodyAuthoring>() != null)
+            if (authoring.gameObject.GetComponent<Rigidbody>() != null)
             {
-                UnityEngine.Debug.LogError("ERROR: kinematic character objects cannot have a PhysicsBodyAuthoring component. The correct physics components will be setup automatically during conversion. Conversion will be aborted");
+                UnityEngine.Debug.LogError("ERROR: kinematic character objects cannot have a Rigidbody component. The correct physics components will be setup automatically during conversion. Conversion will be aborted");
                 return;
-            } 
+            }
 
             Entity characterEntity = baker.GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
 
             // Base character components
-            baker.AddComponent(characterEntity, new KinematicCharacterProperties(authoringProperties)); 
+            baker.AddComponent(characterEntity, new KinematicCharacterProperties(authoringProperties));
             baker.AddComponent(characterEntity, KinematicCharacterBody.GetDefault());
             baker.AddComponent(characterEntity, new StoredKinematicCharacterData());
 
@@ -393,7 +393,7 @@ namespace Unity.CharacterController
 
             return newCharacterHit;
         }
-        
+
         /// <summary>
         /// Incrementally rotates a rotation at a variable rate, based on a rotation delta that should happen over a fixed time delta
         /// </summary>

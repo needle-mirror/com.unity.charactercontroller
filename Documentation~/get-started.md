@@ -12,7 +12,10 @@ These contain first-person and third-person character prefabs and code that can 
 * [Third-person character setup](get-started-third-person.md)
 * [Standard characters implementation overview](get-started-implementation-overview.md)
 
-A full step-by-step tutorial on setting up and customizing these standard character controllers is available [on GitHub](https://github.com/Unity-Technologies/CharacterControllerSamples/blob/master/_Documentation/tutorial.md).
+
+## Tutorial
+
+A full step-by-step tutorial on setting up and customizing character controllers is available [on GitHub](https://github.com/Unity-Technologies/CharacterControllerSamples/blob/master/_Documentation/tutorial.md).
 
 
 ## Sample projects

@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using UnityEngine.Serialization;
 
 [DisallowMultipleComponent]
-[RequireComponent(typeof(PhysicsShapeAuthoring))]
 public class FirstPersonCharacterAuthoring : MonoBehaviour
 {
     public GameObject ViewEntity;
@@ -22,9 +21,9 @@ public class FirstPersonCharacterAuthoring : MonoBehaviour
             KinematicCharacterUtilities.BakeCharacter(this, authoring, authoring.CharacterProperties);
 
             authoring.Character.ViewEntity = GetEntity(authoring.ViewEntity, TransformUsageFlags.Dynamic);
-        
+
             Entity entity = GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
-            
+
             AddComponent(entity, authoring.Character);
             AddComponent(entity, new FirstPersonCharacterControl());
         }
