@@ -13,5 +13,5 @@ To set up a first-person standard character, perform the following steps:
 1. Navigate to the `Samples/Character Controller/[version]/Standard Characters/Common/Scripts/Camera` folder. Drag the `MainEntityCameraAuthoring` script onto the **View** GameObject: 
     ![[Screenshot]](./images/first-person-view-script.jpg)<br/>
     This component marks the **View** entity as the entity that your GameObject camera must follow. The **View** GameObject represents the camera point of the first person character. When you control the look input of the character, Unity rotates the **View** entity up and down. 
-1. Make sure your scene has a camera GameObject that isn't in a subscene. Drag the `MainGameObjectCameraAuthoring` script onto the camera. This component marks the camera as the GameObject that must copy the entity marked with `MainEntityCameraAuthoring` every frame: 
+1. Make sure your scene has a camera GameObject that isn't in a subscene. Drag the `MainGameObjectCamera` script onto the camera. This component marks the camera as the GameObject that must copy the entity marked with `MainEntityCameraAuthoring` every frame: 
     ![Screenshot](./images/first-person-camera-script.jpg)

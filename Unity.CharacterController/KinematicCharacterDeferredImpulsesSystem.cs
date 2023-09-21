@@ -15,17 +15,13 @@ namespace Unity.CharacterController
     public partial struct KinematicCharacterDeferredImpulsesSystem : ISystem
     {
         private EntityQuery _characterQuery;
-        
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             _characterQuery = KinematicCharacterUtilities.GetBaseCharacterQueryBuilder().Build(ref state);
             state.RequireForUpdate(_characterQuery);
         }
-
-        [BurstCompile]
-        public void OnDestroy(ref SystemState state)
-        { }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
@@ -85,20 +81,23 @@ namespace Unity.CharacterController
                     }
                     else
                     {
-                        PhysicsVelocity bodyPhysicsVelocity = PhysicsVelocityLookup[deferredImpulse.OnEntity];
+                        if (PhysicsVelocityLookup.TryGetComponent(deferredImpulse.OnEntity, out PhysicsVelocity bodyPhysicsVelocity))
+                        {
+                            bodyPhysicsVelocity.Linear += deferredImpulse.LinearVelocityChange;
+                            bodyPhysicsVelocity.Angular += deferredImpulse.AngularVelocityChange;
 
-                        bodyPhysicsVelocity.Linear += deferredImpulse.LinearVelocityChange;
-                        bodyPhysicsVelocity.Angular += deferredImpulse.AngularVelocityChange;
-
-                        PhysicsVelocityLookup[deferredImpulse.OnEntity] = bodyPhysicsVelocity;
+                            PhysicsVelocityLookup[deferredImpulse.OnEntity] = bodyPhysicsVelocity;
+                        }
                     }
 
                     // Displacement
                     if (math.lengthsq(deferredImpulse.Displacement) > 0f)
                     {
-                        LocalTransform bodyTransform = TransformLookup[deferredImpulse.OnEntity];
-                        bodyTransform.Position += deferredImpulse.Displacement;
-                        TransformLookup[deferredImpulse.OnEntity] = bodyTransform;
+                        if (TransformLookup.TryGetComponent(deferredImpulse.OnEntity, out LocalTransform bodyTransform))
+                        {
+                            bodyTransform.Position += deferredImpulse.Displacement;
+                            TransformLookup[deferredImpulse.OnEntity] = bodyTransform;
+                        }
                     }
                 }
             }

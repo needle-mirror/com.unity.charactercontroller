@@ -17,6 +17,8 @@ These contain first-person and third-person character prefabs and code that can 
 
 A full step-by-step tutorial on setting up and customizing character controllers is available [on GitHub](https://github.com/Unity-Technologies/CharacterControllerSamples/blob/master/_Documentation/tutorial.md).
 
+The tutorial also includes a section on how to network the standard characters with the Unity Netcode package.
+
 
 ## Sample projects
 

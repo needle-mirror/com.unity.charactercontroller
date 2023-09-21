@@ -5,7 +5,6 @@ using Unity.Entities;
 public class FirstPersonPlayerAuthoring : MonoBehaviour
 {
     public GameObject ControlledCharacter;
-    public float MouseSensitivity = 1f;
 
     public class Baker : Baker<FirstPersonPlayerAuthoring>
     {
@@ -15,9 +14,8 @@ public class FirstPersonPlayerAuthoring : MonoBehaviour
             AddComponent(entity, new FirstPersonPlayer
             {
                 ControlledCharacter = GetEntity(authoring.ControlledCharacter, TransformUsageFlags.Dynamic),
-                MouseSensitivity = authoring.MouseSensitivity,
             });
-            AddComponent(entity, new FirstPersonPlayerInputs());
+            AddComponent<FirstPersonPlayerInputs>(entity);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Unity.CharacterController
     /// <summary>
     /// Handles remembering character interpolation data during the fixed physics update
     /// </summary>
-    [UpdateInGroup(typeof(KinematicCharacterPhysicsUpdateGroup), OrderFirst = true)] 
+    [UpdateInGroup(typeof(KinematicCharacterPhysicsUpdateGroup), OrderFirst = true)]
     [WorldSystemFilter(WorldSystemFilterFlags.LocalSimulation | WorldSystemFilterFlags.ClientSimulation)]
     [BurstCompile]
     public partial struct CharacterInterpolationRememberTransformSystem : ISystem
@@ -36,7 +36,7 @@ namespace Unity.CharacterController
             /// </summary>
             public double LastTimeRememberedInterpolationTransforms;
         }
-        
+
         private ComponentTypeHandle<LocalTransform> _transformType;
         private ComponentTypeHandle<CharacterInterpolation> _characterInterpolationType;
         private EntityQuery _interpolatedEntitiesQuery;
@@ -44,7 +44,7 @@ namespace Unity.CharacterController
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            _interpolatedEntitiesQuery = KinematicCharacterUtilities.GetInterpolatedCharacterQueryBuilder().Build(ref state);
+            _interpolatedEntitiesQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<LocalTransform, CharacterInterpolation>().Build(ref state);
 
             _transformType = state.GetComponentTypeHandle<LocalTransform>(true);
             _characterInterpolationType = state.GetComponentTypeHandle<CharacterInterpolation>(false);
@@ -59,13 +59,13 @@ namespace Unity.CharacterController
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            _transformType.Update(ref state);
-            _characterInterpolationType.Update(ref state);
-
             TimeData time = SystemAPI.Time;
             ref Singleton singleton = ref SystemAPI.GetSingletonRW<Singleton>().ValueRW;
             singleton.InterpolationDeltaTime = time.DeltaTime;
             singleton.LastTimeRememberedInterpolationTransforms = time.ElapsedTime;
+
+            _transformType.Update(ref state);
+            _characterInterpolationType.Update(ref state);
 
             CharacterInterpolationRememberTransformJob job = new CharacterInterpolationRememberTransformJob
             {
@@ -84,7 +84,7 @@ namespace Unity.CharacterController
             /// <summary>
             /// LocalTransform type handle
             /// </summary>
-            [ReadOnly] 
+            [ReadOnly]
             public ComponentTypeHandle<LocalTransform> TransformType;
             /// <summary>
             /// CharacterInterpolation type handle
@@ -119,7 +119,7 @@ namespace Unity.CharacterController
                         sizePosition,
                         chunkCount
                     );
-                    
+
                     // Copy rotations
                     UnsafeUtility.MemCpyStride(
                         chunkInterpolationsPtr,
@@ -129,7 +129,7 @@ namespace Unity.CharacterController
                         sizeRotation,
                         chunkCount
                     );
-                    
+
                     // Reset interpolation skippings
                     UnsafeUtility.MemCpyStride(
                         (void*)((long)chunkInterpolationsPtr + sizeRotation + sizePosition), // the "InterpolationSkipping" field
@@ -142,7 +142,7 @@ namespace Unity.CharacterController
                 }
             }
         }
-    } 
+    }
 
     /// <summary>
     /// Handles interpolating the character during variable update
@@ -154,31 +154,38 @@ namespace Unity.CharacterController
     public partial struct CharacterInterpolationSystem : ISystem
     {
         [BurstCompile]
+        public void OnCreate(ref SystemState state)
+        {
+            state.RequireForUpdate<CharacterInterpolation>();
+            state.RequireForUpdate<CharacterInterpolationRememberTransformSystem.Singleton >();
+        }
+
+        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             CharacterInterpolationRememberTransformSystem.Singleton singleton = SystemAPI.GetSingletonRW<CharacterInterpolationRememberTransformSystem.Singleton>().ValueRO;
-    
+
             if (singleton.LastTimeRememberedInterpolationTransforms <= 0f)
             {
                 return;
             }
-    
+
             float fixedTimeStep = singleton.InterpolationDeltaTime;
             if (fixedTimeStep == 0f)
             {
                 return;
             }
-    
+
             float timeAheadOfLastFixedUpdate = (float)(SystemAPI.Time.ElapsedTime - singleton.LastTimeRememberedInterpolationTransforms);
             float normalizedTimeAhead = math.clamp(timeAheadOfLastFixedUpdate / fixedTimeStep, 0f, 1f);
-            
+
             CharacterInterpolationJob job = new CharacterInterpolationJob
             {
                 NormalizedTimeAhead = normalizedTimeAhead,
             };
-            job.ScheduleParallel();
+            state.Dependency = job.ScheduleParallel(state.Dependency);
         }
-        
+
         /// <summary>
         /// Job that interpolates the character visual transforms
         /// </summary>
@@ -190,9 +197,9 @@ namespace Unity.CharacterController
             /// Ratio representing how far in time we are in-between two fixed updates.
             /// </summary>
             public float NormalizedTimeAhead;
-    
+
             void Execute(
-                ref CharacterInterpolation characterInterpolation, 
+                ref CharacterInterpolation characterInterpolation,
                 ref LocalToWorld localToWorld,
                 in LocalTransform transform)
             {
@@ -206,7 +213,7 @@ namespace Unity.CharacterController
                         interpolatedRot = math.slerp(characterInterpolation.InterpolationFromTransform.rot, targetTransform.rot, NormalizedTimeAhead);
                     }
                 }
-            
+
                 float3 interpolatedPos = targetTransform.pos;
                 if (characterInterpolation.InterpolatePosition == 1)
                 {
@@ -215,7 +222,7 @@ namespace Unity.CharacterController
                         interpolatedPos = math.lerp(characterInterpolation.InterpolationFromTransform.pos, targetTransform.pos, NormalizedTimeAhead);
                     }
                 }
-                
+
                 localToWorld.Value = new float4x4(interpolatedRot, interpolatedPos);
             }
         }

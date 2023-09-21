@@ -35,10 +35,6 @@ public partial struct FirstPersonCharacterPhysicsUpdateSystem : ISystem
     }
 
     [BurstCompile]
-    public void OnDestroy(ref SystemState state)
-    { }
-
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         _context.OnSystemUpdate(ref state);
@@ -76,7 +72,10 @@ public partial struct FirstPersonCharacterPhysicsUpdateSystem : ISystem
     }
 }
 
-[UpdateInGroup(typeof(KinematicCharacterVariableUpdateGroup))]
+[UpdateInGroup(typeof(SimulationSystemGroup))]
+[UpdateAfter(typeof(FixedStepSimulationSystemGroup))]
+[UpdateAfter(typeof(FirstPersonPlayerVariableStepControlSystem))]
+[UpdateBefore(typeof(TransformSystemGroup))]
 [BurstCompile]
 public partial struct FirstPersonCharacterVariableUpdateSystem : ISystem
 {
@@ -100,10 +99,6 @@ public partial struct FirstPersonCharacterVariableUpdateSystem : ISystem
 
         state.RequireForUpdate(_characterQuery);
     }
-
-    [BurstCompile]
-    public void OnDestroy(ref SystemState state)
-    { }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)

@@ -3,16 +3,6 @@
 The character controller update happens at two different points in the frame, and is executed by the combination of a character aspect ([`KinematicCharacterAspect`](xref:Unity.CharacterController.KinematicCharacterAspect)) and a character processor ([`IKinematicCharacterProcessor`](xref:Unity.CharacterController.IKinematicCharacterProcessor`1)).
 
 
-## Update groups
-
-Two system groups are available as sensible defaults where character update logic should be executed:
-
-* `KinematicCharacterPhysicsUpdateGroup`: updates at a fixed timestep, after the physics update. This is where the character physics update should take place (detecting ground, assigning a velocity, detecting movement collisions, etc...).
-* `KinematicCharacterVariableUpdateGroup`: updates every frame, after the fixed update and before transforms. This is the best place to update the character rotation, because it will be perfectly in sync with rendering, and will therefore result in a rotation that feels more responsive.
-
-Keep in mind, however, that updating characters as part of these groups is merely a suggestion; not a requirement. For example: if you wanted to, you could choose to update character rotation as part of the `KinematicCharacterPhysicsUpdateGroup` instead of the `KinematicCharacterVariableUpdateGroup`, and interpolate character rotation between the fixed updates.
-
-
 ## The character aspect
 
 The [`KinematicCharacterAspect`](xref:Unity.CharacterController.KinematicCharacterAspect) holds all the data required for character updates, and contains methods for major character update steps and utilities. 

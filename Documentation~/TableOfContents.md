@@ -1,5 +1,4 @@
 * [Character Controller](index.md)
-    * [Limitations](limitations.md)
 * [Get started](get-started.md)
     * [Standard characters implementation overview](get-started-implementation-overview.md)
     * [First-person character setup](get-started-first-person.md)
@@ -22,5 +21,6 @@
     * [Character hits](character-hits.md)
     * [Moving platforms](moving-platforms.md)
 * [Input handling](input-handling.md)
-* [Networking](networking.md)
+* [Netcode](netcode.md)
 * [Performance](performance.md)
+* [Limitations](limitations.md)

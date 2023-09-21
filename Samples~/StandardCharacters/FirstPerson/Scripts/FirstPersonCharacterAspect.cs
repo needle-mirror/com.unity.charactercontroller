@@ -124,7 +124,7 @@ public readonly partial struct FirstPersonCharacterAspect : IAspect, IKinematicC
         FirstPersonCharacterUtilities.ComputeFinalRotationsFromRotationDelta(
             ref characterRotation,
             ref characterComponent.ViewPitchDegrees,
-            characterControl.LookYawPitchDegrees,
+            characterControl.LookDegreesDelta,
             0f,
             characterComponent.MinViewAngle,
             characterComponent.MaxViewAngle,

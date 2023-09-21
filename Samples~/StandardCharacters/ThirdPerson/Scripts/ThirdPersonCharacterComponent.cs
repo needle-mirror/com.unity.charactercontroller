@@ -18,23 +18,6 @@ public struct ThirdPersonCharacterComponent : IComponentData
     public float3 Gravity;
     public bool PreventAirAccelerationAgainstUngroundedHits;
     public BasicStepAndSlopeHandlingParameters StepAndSlopeHandling;
-
-    public static ThirdPersonCharacterComponent GetDefault()
-    {
-        return new ThirdPersonCharacterComponent
-        {
-            RotationSharpness = 25f,
-            GroundMaxSpeed = 10f,
-            GroundedMovementSharpness = 15f,
-            AirAcceleration = 50f,
-            AirMaxSpeed = 10f,
-            AirDrag = 0f,
-            JumpSpeed = 10f,
-            Gravity = math.up() * -30f,
-            PreventAirAccelerationAgainstUngroundedHits = true,
-            StepAndSlopeHandling = BasicStepAndSlopeHandlingParameters.GetDefault(),
-        };
-    }
 }
 
 [Serializable]

@@ -79,7 +79,9 @@ namespace Unity.CharacterController.RuntimeTests
         }
     }
 
-    [UpdateInGroup(typeof(KinematicCharacterVariableUpdateGroup))]
+    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateAfter(typeof(FixedStepSimulationSystemGroup))]
+    [UpdateBefore(typeof(TransformSystemGroup))]
     [BurstCompile]
     public partial struct TestCharacterVariableUpdateSystem : ISystem
     {

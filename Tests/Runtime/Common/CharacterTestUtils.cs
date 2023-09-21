@@ -202,7 +202,7 @@ namespace Unity.CharacterController.RuntimeTests
             world.GetOrCreateSystem<KinematicCharacterDeferredImpulsesSystem>().Update(world.Unmanaged);
             world.EntityManager.CompleteAllTrackedJobs();
         }
-        
+
         public static void GetCharacterAspectWithContexts(World world, Entity characterEntity, PhysicsWorldSingleton physicsWorldSingleton, out TestCharacterAspect characterAspect, out KinematicCharacterUpdateContext baseContext, out TestCharacterUpdateContext context)
         {
             SimulationSystemGroup simulationSystem = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
@@ -267,6 +267,7 @@ namespace Unity.CharacterController.RuntimeTests
                 ref baseContext,
                 world.EntityManager.GetComponentData<LocalTransform>(characterEntity).Position,
                 world.EntityManager.GetComponentData<LocalTransform>(characterEntity).Rotation,
+                world.EntityManager.GetComponentData<LocalTransform>(characterEntity).Scale,
                 castDirection,
                 castLength,
                 true,

@@ -1,7 +1,7 @@
 
 # Limitations
 
-This page outlines limitations of the Character Controller package.
+This page outlines some known limitations of the Character Controller.
 
 * The root character entity must never be a child of another entity. However, there is a mechanism to imitate parenting. For more information, see the documentation on [parenting](concepts-parenting.md).
 * While this character controller offers support for [dynamic rigidbody interactions](dynamic-body-interaction.md), which tries to imitate the behavior of a fully dynamic character, it has the following limitations:

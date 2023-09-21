@@ -13,34 +13,27 @@ The Standard Characters include the following prefabs:
 
 ## Controlling the character
 
-Here are the main steps of how input is converted into character movement by the standatd character systems:
+Here are the main steps of how input is converted into character movement by the standard character systems:
 
 * The Player gathers raw input from input systems
 * The Player converts that raw input to a format that the character can easily work with, and writes that data to the Control component (`ThirdPersonCharacterControl` or `FirstPersonCharacterControl`) on the character. This control component acts as a common interface for controlling the character, whether it's a human or an AI controlling it.
 * The character moves with the input stored in its control component
 
-The following is an example of how this happens in code, using the third-person character as an example:
+The following steps describe how this happens in code, using the third-person character as an example:
 
-### Player
+* `InitializationSystemGroup`
+    * `ThirdPersonPlayerInputsSystem` gathers input from Unity's input system every frame. It iterates on all entities with a `ThirdPersonPlayerInputs` component, and writes the raw input to that component. 
+* `SimulationSystemGroup`
+    * `FixedStepSimulationSystemGroup`
+        * `ThirdPersonPlayerFixedStepControlSystem` handles taking the raw input from `ThirdPersonPlayerInputs`, and converting it to a format that the character can work with in the `ThirdPersonCharacterControl` component. It does this for inputs that are meant to be consumed during the fixed update.
+        * `ThirdPersonCharacterPhysicsUpdateSystem` schedules a job that calls `ThirdPersonCharacterAspect.PhysicsUpdate`. This is where the character moves and solves collisions, based on inputs stored in the `ThirdPersonCharacterControl` component.
+    * `ThirdPersonPlayerVariableStepControlSystem` handles taking the raw input from `ThirdPersonPlayerInputs`, and converting it to a format that the character and camera can work with in the `ThirdPersonCharacterControl` and `OrbitCameraControl` components respectively. It does this for inputs that are meant to be consumed during the regular (non-fixed) update.
+    * `ThirdPersonCharacterVariableUpdateSystem` schedules a job that calls `ThirdPersonCharacterAspect.VariableUpdate`. This is where the character handles rotation, based on inputs stored in the `ThirdPersonCharacterControl` component.
+    * `OrbitCameraSimulationSystem` handles camera rotation and basic distance calculations, based on inputs stored in the `OrbitCameraControl` component.
+    * `TransformSystemGroup` updates.
+    * `OrbitCameraLateUpdateSystem` handles camera smoothing and obstruction calculations. This is done after the transforms update so that moving physics obstructions can be smoothed out with interpolation.
 
-1. `ThirdPersonPlayerInputsSystem` gathers input from Unity's input system every frame. It iterates on all entities with a `ThirdPersonPlayerInputs` component, and writes the raw input to that component. 
-1. `ThirdPersonPlayerVariableStepControlSystem` and `ThirdPersonPlayerFixedStepControlSystem` handle taking the raw input from `ThirdPersonPlayerInputs`, and converting it to a format that the character can work with in the `ThirdPersonCharacterControl` component. They do this at variable and fixed update respectively, depending on when these inputs are actually used by the character.
-1. The same is done for camera control: `ThirdPersonPlayerVariableStepControlSystem` writes into the `OrbitCameraControl` component in order to tell the camera what to do.
-
-### Character movement
-
-1. `ThirdPersonCharacterPhysicsUpdateSystem` updates at a fixed timestep, and schedules a job that calls `ThirdPersonCharacterAspect.PhysicsUpdate`.
-1. `ThirdPersonCharacterAspect.PhysicsUpdate` calls the first phase of character update steps through the `CharacterAspect`, and then calls `HandleVelocityControl`.
-1. `HandleVelocityControl` is where the `ThirdPersonCharacterControl` component is used to determine character velocity. This is the main method you should modify to customize character movement.
-1. `ThirdPersonCharacterAspect.PhysicsUpdate` then calls the second phase of character update steps through the `CharacterAspect`, and it's in these steps that the character will actually move and detect collisions based on its velocity
-
-### Character rotation
-1. `ThirdPersonCharacterVariableUpdateSystem` updates at a variable timestep, and schedules a job that calls `ThirdPersonCharacterAspect.VariableUpdate`.
-1. `ThirdPersonCharacterAspect.VariableUpdate` use the move vector of the `ThirdPersonCharacterControl` component to calculate and set a character rotation that faces this move direction.
-
-### Camera
-
-1. `OrbitCameraSystem` moves the camera based on the look input in the `OrbitCameraControl` component.
+The first person character update is very similar, except it doesn't have "orbit camera" systems and components.
 
 
 ## Customize character movement

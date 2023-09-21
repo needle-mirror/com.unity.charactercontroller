@@ -20,38 +20,17 @@ public struct FirstPersonCharacterComponent : IComponentData
 
     public float MinViewAngle;
     public float MaxViewAngle;
-    [HideInInspector]
+    
     public Entity ViewEntity;
-    [HideInInspector]
     public float ViewPitchDegrees;
-    [HideInInspector]
     public quaternion ViewLocalRotation;
-
-    public static FirstPersonCharacterComponent GetDefault()
-    {
-        return new FirstPersonCharacterComponent
-        {
-            GroundMaxSpeed = 10f,
-            GroundedMovementSharpness = 15f,
-            AirAcceleration = 50f,
-            AirMaxSpeed = 10f,
-            AirDrag = 0f,
-            JumpSpeed = 10f,
-            Gravity = math.up() * -30f,
-            PreventAirAccelerationAgainstUngroundedHits = true,
-            StepAndSlopeHandling = BasicStepAndSlopeHandlingParameters.GetDefault(),
-
-            MinViewAngle = -90f,
-            MaxViewAngle = 90f,
-        };
-    }
 }
 
 [Serializable]
 public struct FirstPersonCharacterControl : IComponentData
 {
     public float3 MoveVector;
-    public float2 LookYawPitchDegrees;
+    public float2 LookDegreesDelta;
     public bool Jump;
 }
 

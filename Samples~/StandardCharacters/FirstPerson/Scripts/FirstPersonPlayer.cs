@@ -7,7 +7,6 @@ using Unity.Mathematics;
 public struct FirstPersonPlayer : IComponentData
 {
     public Entity ControlledCharacter;
-    public float MouseSensitivity;
 }
 
 [Serializable]

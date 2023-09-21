@@ -11,14 +11,4 @@ namespace Unity.CharacterController
     public partial class KinematicCharacterPhysicsUpdateGroup : ComponentSystemGroup
     {
     }
-    
-    /// <summary>
-    /// System group for the default character rotation update
-    /// </summary>
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
-    [UpdateAfter(typeof(FixedStepSimulationSystemGroup))]
-    [UpdateBefore(typeof(TransformSystemGroup))]
-    public partial class KinematicCharacterVariableUpdateGroup : ComponentSystemGroup
-    {
-    }
 }

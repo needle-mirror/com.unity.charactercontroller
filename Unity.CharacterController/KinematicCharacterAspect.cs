@@ -1,19 +1,13 @@
 using System;
 using System.Runtime.CompilerServices;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Core;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
-using Unity.Physics.Authoring;
 using Unity.Physics.Extensions;
-using Unity.Physics.Systems;
 using Unity.Transforms;
-using UnityEngine;
-using Material = Unity.Physics.Material;
 using RaycastHit = Unity.Physics.RaycastHit;
 
 namespace Unity.CharacterController
@@ -30,18 +24,18 @@ namespace Unity.CharacterController
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
         /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         void UpdateGroundingUp(
-            ref C context, 
+            ref C context,
             ref KinematicCharacterUpdateContext baseContext);
-        
+
         /// <summary>
         /// Determines if a hit can be collided with or not.
         /// </summary>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
-        /// <param name="hit"> The evaluated hit </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
+        /// <param name="hit"> The evaluated hit </param>
         /// <returns> Return true if the hit can be collided with, return false if not. </returns>
         bool CanCollideWithHit(
-            ref C context, 
+            ref C context,
             ref KinematicCharacterUpdateContext baseContext,
             in BasicHit hit);
 
@@ -49,28 +43,28 @@ namespace Unity.CharacterController
         /// Determines if the character can be grounded the hit or not.
         /// </summary>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
-        /// <param name="hit"> The evaluated hit </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
+        /// <param name="hit"> The evaluated hit </param>
         /// <param name="groundingEvaluationType"> An identifier meant to indicate what type of grounding evaluation is being done at the moment of calling this. </param>
         /// <returns></returns>
         bool IsGroundedOnHit(
-            ref C context, 
+            ref C context,
             ref KinematicCharacterUpdateContext baseContext,
-            in BasicHit hit, 
+            in BasicHit hit,
             int groundingEvaluationType);
 
         /// <summary>
         /// Determines what happens when the character detects a hit during its movement phase.
         /// </summary>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
-        /// <param name="hit"> The evaluated hit </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
+        /// <param name="hit"> The evaluated hit </param>
         /// <param name="remainingMovementDirection"> The direction of the movement vector that remains to be processed </param>
         /// <param name="remainingMovementLength"> The magnitude of the movement vector that remains to be processed </param>
         /// <param name="originalVelocityDirection"> The original direction of the movement vector before any movement projection happened </param>
         /// <param name="hitDistance"> The distance of the detected hit </param>
         void OnMovementHit(
-            ref C context, 
+            ref C context,
             ref KinematicCharacterUpdateContext baseContext,
             ref KinematicCharacterHit hit,
             ref float3 remainingMovementDirection,
@@ -82,14 +76,14 @@ namespace Unity.CharacterController
         /// Requests that the character velocity be projected on the hits detected so far in the character update.
         /// </summary>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="velocity"> The character velocity that needs to be projected </param>
         /// <param name="characterIsGrounded"> Whether the character is grounded or not </param>
         /// <param name="characterGroundHit"> The current effective ground hit of the character </param>
-        /// <param name="hits"> The hits that have been detected so far during the character update </param>
+        /// <param name="velocityProjectionHits"> The hits that have been detected so far during the character update </param>
         /// <param name="originalVelocityDirection"> The original velocity direction of the character at the beginning of the character update, before any projection has happened </param>
         void ProjectVelocityOnHits(
-            ref C context, 
+            ref C context,
             ref KinematicCharacterUpdateContext baseContext,
             ref float3 velocity,
             ref bool characterIsGrounded,
@@ -101,12 +95,12 @@ namespace Unity.CharacterController
         /// Provides an opportunity to modify the physics masses used to solve impulses between characters and detected hit bodies.
         /// </summary>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterMass"> The mass of the character </param>
         /// <param name="otherMass"> The mass of the other body that we've detected a hit with </param>
         /// <param name="hit"> The evaluated hit with the dynamic body </param>
         void OverrideDynamicHitMasses(
-            ref C context, 
+            ref C context,
             ref KinematicCharacterUpdateContext baseContext,
             ref PhysicsMass characterMass,
             ref PhysicsMass otherMass,
@@ -131,7 +125,7 @@ namespace Unity.CharacterController
         /// The character body component
         /// </summary>
         public KinematicCharacterBody SavedCharacterBody;
-        
+
         /// <summary>
         /// Size of the saved physics collider, in bytes
         /// </summary>
@@ -178,7 +172,7 @@ namespace Unity.CharacterController
         /// </summary>
         [NativeDisableContainerSafetyRestriction]
         public NativeArray<KinematicVelocityProjectionHit> SavedVelocityProjectionHits;
-        
+
         /// <summary>
         /// Saves the character state. Only reallocates data arrays if the current arrays are not allocated or don't have the required capacity
         /// </summary>
@@ -189,7 +183,7 @@ namespace Unity.CharacterController
             SavedTransform = characterAspect.LocalTransform.ValueRO;
             SavedCharacterProperties = characterAspect.CharacterProperties.ValueRO;
             SavedCharacterBody = characterAspect.CharacterBody.ValueRO;
-            
+
             PhysicsCollider characterAspectPhysicsCollider = characterAspect.PhysicsCollider.ValueRO;
             SavedPhysicsColliderMemorySize = characterAspectPhysicsCollider.ColliderPtr->MemorySize;
             CheckReallocateArray(ref SavedPhysicsColliderMemory, SavedPhysicsColliderMemorySize, allocator);
@@ -198,15 +192,15 @@ namespace Unity.CharacterController
             SavedCharacterHitsBufferCount = characterAspect.CharacterHitsBuffer.Length;
             CheckReallocateArray(ref SavedCharacterHitsBuffer, SavedCharacterHitsBufferCount, allocator);
             UnsafeUtility.MemCpy(SavedCharacterHitsBuffer.GetUnsafePtr(), characterAspect.CharacterHitsBuffer.GetUnsafePtr(), SavedCharacterHitsBufferCount);
-            
+
             SavedStatefulHitsBufferCount = characterAspect.StatefulHitsBuffer.Length;
             CheckReallocateArray(ref SavedStatefulHitsBuffer, SavedStatefulHitsBufferCount, allocator);
             UnsafeUtility.MemCpy(SavedStatefulHitsBuffer.GetUnsafePtr(), characterAspect.StatefulHitsBuffer.GetUnsafePtr(), SavedStatefulHitsBufferCount);
-            
+
             SavedDeferredImpulsesBufferCount = characterAspect.DeferredImpulsesBuffer.Length;
             CheckReallocateArray(ref SavedDeferredImpulsesBuffer, SavedDeferredImpulsesBufferCount, allocator);
             UnsafeUtility.MemCpy(SavedDeferredImpulsesBuffer.GetUnsafePtr(), characterAspect.DeferredImpulsesBuffer.GetUnsafePtr(), SavedDeferredImpulsesBufferCount);
-            
+
             SavedVelocityProjectionHitsCount = characterAspect.VelocityProjectionHits.Length;
             CheckReallocateArray(ref SavedVelocityProjectionHits, SavedVelocityProjectionHitsCount, allocator);
             UnsafeUtility.MemCpy(SavedVelocityProjectionHits.GetUnsafePtr(), characterAspect.VelocityProjectionHits.GetUnsafePtr(), SavedVelocityProjectionHitsCount);
@@ -244,7 +238,7 @@ namespace Unity.CharacterController
             characterAspect.VelocityProjectionHits.ResizeUninitialized(SavedVelocityProjectionHitsCount);
             UnsafeUtility.MemCpy(characterAspect.VelocityProjectionHits.GetUnsafePtr(), SavedVelocityProjectionHits.GetUnsafePtr(), SavedVelocityProjectionHitsCount);
         }
-        
+
         /// <summary>
         /// Disposes all data arrays stored in the character state save
         /// </summary>
@@ -288,7 +282,7 @@ namespace Unity.CharacterController
                 {
                     arr.Dispose();
                 }
-                
+
                 arr = new NativeArray<T>(requiredCapacity, allocator);
             }
         }
@@ -340,7 +334,7 @@ namespace Unity.CharacterController
         public NativeList<int> TmpRigidbodyIndexesProcessed;
 
         /// <summary>
-        /// Provides an opportunity to get and store global data at the moment of a system's creation 
+        /// Provides an opportunity to get and store global data at the moment of a system's creation
         /// </summary>
         /// <param name="state"> The state of the system calling this method </param>
         public void OnSystemCreate(ref SystemState state)
@@ -438,7 +432,7 @@ namespace Unity.CharacterController
         [UnityEngine.Tooltip("Max slope change that the character can stay grounded on (degrees)")]
         [UnityEngine.Range(0f, 180f)]
         public float MaxDownwardSlopeChangeAngle;
-        
+
         /// <summary>
         /// Whether or not to constrain the character velocity to ground plane when it hits a non-grounded slope
         /// </summary>
@@ -515,7 +509,7 @@ namespace Unity.CharacterController
             /// </summary>
             public const float MinDotRatioForVerticalDecollision = 0.1f;
         }
-        
+
         /// <summary>
         /// The entity of the character
         /// </summary>
@@ -552,7 +546,7 @@ namespace Unity.CharacterController
         /// The <see cref="KinematicVelocityProjectionHit"/> dynamic buffer of the character entity
         /// </summary>
         public readonly DynamicBuffer<KinematicVelocityProjectionHit> VelocityProjectionHits;
-        
+
         /// <summary>
         /// Returns the forward direction of the character transform
         /// </summary>
@@ -601,30 +595,30 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="deltaTime"> The time delta of the character update </param>
         /// <typeparam name="T"> The type of the struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </typeparam>
         /// <typeparam name="C"> The type of the user-created context struct </typeparam>
         public void Update_Initialize<T, C>(
-            in T processor, 
+            in T processor,
             ref C context,
             ref KinematicCharacterUpdateContext baseContext,
-            ref KinematicCharacterBody characterBody, 
+            ref KinematicCharacterBody characterBody,
             float deltaTime)  where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             CharacterHitsBuffer.Clear();
             DeferredImpulsesBuffer.Clear();
             VelocityProjectionHits.Clear();
-            
+
             characterBody.WasGroundedBeforeCharacterUpdate = characterBody.IsGrounded;
             characterBody.PreviousParentEntity = characterBody.ParentEntity;
-            
+
             characterBody.RotationFromParent = quaternion.identity;
             characterBody.IsGrounded = false;
             characterBody.GroundHit = default;
             characterBody.LastPhysicsUpdateDeltaTime = deltaTime;
-            
+
             processor.UpdateGroundingUp(ref context, ref baseContext);
         }
 
@@ -633,7 +627,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="constrainRotationToGroundingUp"> Whether or not to limit rotation around the grounding up direction </param>
@@ -647,7 +641,9 @@ namespace Unity.CharacterController
             ref float3 characterPosition,
             bool constrainRotationToGroundingUp) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
-            quaternion characterRotation = LocalTransform.ValueRO.Rotation;
+            LocalTransform characterTransform = LocalTransform.ValueRO;
+            quaternion characterRotation = characterTransform.Rotation;
+            float characterScale = characterTransform.Scale;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
 
@@ -663,7 +659,7 @@ namespace Unity.CharacterController
             {
                 characterBody.ParentVelocity = default;
             }
-            
+
             // Movement from parent body
             if (characterBody.ParentEntity != Entity.Null)
             {
@@ -698,7 +694,7 @@ namespace Unity.CharacterController
                     float3 castDirection = math.normalizesafe(displacementFromParentMovement);
                     float castLength = math.length(displacementFromParentMovement);
 
-                    ColliderCastInput castInput = new ColliderCastInput(characterPhysicsCollider.Value, characterPosition, characterPosition + (castDirection * castLength), characterRotation);
+                    ColliderCastInput castInput = new ColliderCastInput(characterPhysicsCollider.Value, characterPosition, characterPosition + (castDirection * castLength), characterRotation, characterScale);
                     baseContext.TmpColliderCastHits.Clear();
                     AllHitsCollector<ColliderCastHit> collector = new AllHitsCollector<ColliderCastHit>(1f, ref baseContext.TmpColliderCastHits);
                     baseContext.PhysicsWorld.CastCollider(castInput, ref collector);
@@ -723,7 +719,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <typeparam name="T"> The type of the struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </typeparam>
@@ -750,12 +746,12 @@ namespace Unity.CharacterController
                 }
 
                 GroundDetection(
-                    in processor, 
-                    ref context, 
-                    ref baseContext, 
-                    groundDetectionLength, 
-                    out newIsGrounded, 
-                    out newGroundHit, 
+                    in processor,
+                    ref context,
+                    ref baseContext,
+                    groundDetectionLength,
+                    out newIsGrounded,
+                    out newGroundHit,
                     out float distanceToGround);
 
                 // Ground snapping
@@ -799,7 +795,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <typeparam name="T"> The type of the struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </typeparam>
@@ -812,28 +808,28 @@ namespace Unity.CharacterController
             ref float3 characterPosition) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
-            
+
             float3 originalVelocityDirectionBeforeMove = math.normalizesafe(characterBody.RelativeVelocity);
 
             // Move character based on relativeVelocity
             bool moveConfirmedThereWereNoOverlaps = false;
             MoveWithCollisions(
-                in processor, 
-                ref context, 
-                ref baseContext, 
+                in processor,
+                ref context,
+                ref baseContext,
                 ref characterBody,
                 ref characterPosition,
-                originalVelocityDirectionBeforeMove, 
+                originalVelocityDirectionBeforeMove,
                 out moveConfirmedThereWereNoOverlaps);
 
-            // This has to be after movement has been processed, in order to let our movement to take us 
+            // This has to be after movement has been processed, in order to let our movement to take us
             // out of the collision with a platform before we try to decollide from it
             if (characterProperties.DecollideFromOverlaps && !moveConfirmedThereWereNoOverlaps)
             {
                 SolveOverlaps(
-                    in processor, 
-                    ref context, 
-                    ref baseContext, 
+                    in processor,
+                    ref context,
+                    ref baseContext,
                     ref characterBody,
                     ref characterPosition,
                     originalVelocityDirectionBeforeMove);
@@ -843,7 +839,7 @@ namespace Unity.CharacterController
             if (CharacterHitsBuffer.Length > 0)
             {
                 ProcessCharacterHitDynamics(
-                    in processor, 
+                    in processor,
                     ref context,
                     ref baseContext,
                     ref characterBody);
@@ -855,7 +851,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="stepAndSlopeHandling"> Parameters for step and slope handling </param>
         /// <param name="slopeDetectionVerticalOffset"> The vertical distance from ground hit at which slope detection raycasts will start </param>
@@ -903,7 +899,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="gravity"> The effective gravity used to create a force to apply to the ground, in combination with the character mass </param>
         /// <param name="forceMultiplier"> An arbitrary multiplier to apply to the calculated force to apply to the ground </param>
         /// <typeparam name="T"> The type of the struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </typeparam>
@@ -915,8 +911,9 @@ namespace Unity.CharacterController
             float3 gravity,
             float forceMultiplier = 1f) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
-            quaternion characterRotation = LocalTransform.ValueRO.Rotation;
-            float3 characterPosition = LocalTransform.ValueRO.Position;
+            LocalTransform characterTransform = LocalTransform.ValueRO;
+            quaternion characterRotation = characterTransform.Rotation;
+            float3 characterPosition = characterTransform.Position;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
             KinematicCharacterBody characterBody = CharacterBody.ValueRO;
 
@@ -983,7 +980,7 @@ namespace Unity.CharacterController
         /// <summary>
         /// Handles detecting valid moving platforms based on current ground hit, and automatically sets them as the character's parent entity
         /// </summary>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         public void Update_MovingPlatformDetection(ref KinematicCharacterUpdateContext baseContext, ref KinematicCharacterBody characterBody)
         {
@@ -1002,12 +999,12 @@ namespace Unity.CharacterController
         /// <summary>
         /// Handles preserving velocity momentum when getting unparented from a parent body (such as a moving platform).
         /// </summary>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         public void Update_ParentMomentum(ref KinematicCharacterUpdateContext baseContext, ref KinematicCharacterBody characterBody)
         {
             float3 characterPosition = LocalTransform.ValueRO.Position;
-            
+
             // Reset parent if parent entity doesn't exist anymore
             if (characterBody.ParentEntity != Entity.Null && !baseContext.TrackedTransformLookup.HasComponent(characterBody.ParentEntity))
             {
@@ -1119,7 +1116,7 @@ namespace Unity.CharacterController
                 }
             }
 
-            // Detect Exit states 
+            // Detect Exit states
             for (int i = 0; i <= lastIndexOfOldStatefulHits; i++)
             {
                 StatefulKinematicCharacterHit oldStatefulHit = StatefulHitsBuffer[i];
@@ -1138,13 +1135,13 @@ namespace Unity.CharacterController
                 StatefulHitsBuffer.RemoveRange(0, lastIndexOfOldStatefulHits + 1);
             }
         }
-        
+
         /// <summary>
         /// Detects grounding at the current character pose
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="groundProbingLength"> Ground probing collider cast distance </param>
         /// <param name="isGrounded"> Outputs whether or not valid ground was detected </param>
         /// <param name="groundHit"> Outputs the detected ground hit </param>
@@ -1154,7 +1151,7 @@ namespace Unity.CharacterController
         public unsafe void GroundDetection<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             float groundProbingLength,
             out bool isGrounded,
             out BasicHit groundHit,
@@ -1163,14 +1160,16 @@ namespace Unity.CharacterController
             isGrounded = false;
             groundHit = default;
             distanceToGround = 0f;
-            
-            quaternion characterRotation = LocalTransform.ValueRO.Rotation;
-            float3 characterPosition = LocalTransform.ValueRO.Position;
+
+            LocalTransform characterTransform = LocalTransform.ValueRO;
+            quaternion characterRotation = characterTransform.Rotation;
+            float3 characterPosition = characterTransform.Position;
+            float characterScale = characterTransform.Scale;
             KinematicCharacterBody characterBody = CharacterBody.ValueRO;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
 
-            ColliderCastInput input = new ColliderCastInput(characterPhysicsCollider.Value, characterPosition, characterPosition + (-characterBody.GroundingUp * groundProbingLength), characterRotation);
+            ColliderCastInput input = new ColliderCastInput(characterPhysicsCollider.Value, characterPosition, characterPosition + (-characterBody.GroundingUp * groundProbingLength), characterRotation, characterScale);
             baseContext.TmpColliderCastHits.Clear();
             AllHitsCollector<ColliderCastHit> collector = new AllHitsCollector<ColliderCastHit>(1f, ref baseContext.TmpColliderCastHits);
             baseContext.PhysicsWorld.CastCollider(input, ref collector);
@@ -1185,9 +1184,9 @@ namespace Unity.CharacterController
                 if (characterProperties.EvaluateGrounding)
                 {
                     bool isGroundedOnClosestHit = processor.IsGroundedOnHit(
-                        ref context, 
+                        ref context,
                         ref baseContext,
-                        in groundHit, 
+                        in groundHit,
                         (int)GroundingEvaluationType.GroundProbing);
                     if (isGroundedOnClosestHit)
                     {
@@ -1207,7 +1206,7 @@ namespace Unity.CharacterController
                                 ColliderCastHit tmpHit = baseContext.TmpColliderCastHits[i];
 
                                 // Skip if this is our ground hit
-                                if (tmpHit.RigidBodyIndex == groundHit.RigidBodyIndex && 
+                                if (tmpHit.RigidBodyIndex == groundHit.RigidBodyIndex &&
                                     tmpHit.ColliderKey.Equals(groundHit.ColliderKey))
                                     continue;
 
@@ -1217,15 +1216,15 @@ namespace Unity.CharacterController
                                 {
                                     BasicHit tmpClosestGroundedHit = new BasicHit(tmpHit);
                                     bool isGroundedOnHit = processor.IsGroundedOnHit(
-                                        ref context, 
+                                        ref context,
                                         ref baseContext,
-                                        in tmpClosestGroundedHit, 
+                                        in tmpClosestGroundedHit,
                                         (int)GroundingEvaluationType.GroundProbing);
                                     if (isGroundedOnHit)
                                     {
                                         isGrounded = true;
                                         distanceToGround = tmpHitDistance;
-                                        groundHit = tmpClosestGroundedHit; 
+                                        groundHit = tmpClosestGroundedHit;
                                         break;
                                     }
                                 }
@@ -1238,7 +1237,7 @@ namespace Unity.CharacterController
                         }
                     }
                 }
-                
+
                 // Enhanced ground distance computing
                 if (characterProperties.EnhancedGroundPrecision && distanceToGround <= 0f)
                 {
@@ -1250,11 +1249,11 @@ namespace Unity.CharacterController
                         RigidTransform otherBodyWorldTransform = math.mul(otherBody.WorldFromBody, leafCollider.TransformFromChild);
                         RigidTransform characterRelativeToOther = math.mul(math.inverse(otherBodyWorldTransform), characterWorldTransform);
 
-                        ColliderDistanceInput correctionInput = new ColliderDistanceInput(characterPhysicsCollider.Value, 1, characterRelativeToOther);
+                        ColliderDistanceInput correctionInput = new ColliderDistanceInput(characterPhysicsCollider.Value, 1, characterRelativeToOther, characterScale);
                         if (otherBody.Collider.AsPtr()->CalculateDistance(correctionInput, out DistanceHit correctionHit))
                         {
                             if(correctionHit.Distance > 0f)
-                            { 
+                            {
                                 float3 reconstructedHitNormal = math.mul(otherBodyWorldTransform.rot, correctionHit.SurfaceNormal);
                                 if (math.dot(-reconstructedHitNormal, -characterBody.GroundingUp) > 0f)
                                 {
@@ -1278,7 +1277,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <typeparam name="T"> The type of the struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </typeparam>
         /// <typeparam name="C"> The type of the user-created context struct </typeparam>
@@ -1288,12 +1287,13 @@ namespace Unity.CharacterController
             ref KinematicCharacterUpdateContext baseContext,
             ref KinematicCharacterBody characterBody) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
-            quaternion characterRotation = LocalTransform.ValueRO.Rotation;
-            float3 characterPosition = LocalTransform.ValueRO.Position;
+            LocalTransform characterTransform = LocalTransform.ValueRO;
+            quaternion characterRotation = characterTransform.Rotation;
+            float3 characterPosition = characterTransform.Position;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
-            
+
             baseContext.TmpRigidbodyIndexesProcessed.Clear();
-            
+
             for (int b = 0; b < CharacterHitsBuffer.Length; b++)
             {
                 KinematicCharacterHit characterHit = CharacterHitsBuffer[b];
@@ -1338,7 +1338,7 @@ namespace Unity.CharacterController
                                         out LocalTransform transform,
                                         out otherPhysicsVelocity,
                                         out otherPhysicsMass);
-                                    
+
                                     otherIsDynamic = otherPhysicsMass.InverseMass > 0f;
                                 }
 
@@ -1447,7 +1447,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="originalVelocityDirection"> Direction of the character velocity before any projection of velocity happened on this update </param>
@@ -1457,24 +1457,26 @@ namespace Unity.CharacterController
         public void MoveWithCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref KinematicCharacterBody characterBody,
             ref float3 characterPosition,
             float3 originalVelocityDirection,
             out bool confirmedNoOverlapsOnLastMoveIteration) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             confirmedNoOverlapsOnLastMoveIteration = false;
-            
-            quaternion characterRotation = LocalTransform.ValueRO.Rotation;
+
+            LocalTransform characterTransform = LocalTransform.ValueRO;
+            quaternion characterRotation = characterTransform.Rotation;
+            float characterScale = characterTransform.Scale;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
-            
+
             // Project on ground hit
             if(characterBody.IsGrounded)
             {
                 ProjectVelocityOnGrounding(ref characterBody.RelativeVelocity, characterBody.GroundHit.Normal, characterBody.GroundingUp);
             }
-            
+
             float remainingMovementLength = math.length(characterBody.RelativeVelocity) * baseContext.Time.DeltaTime;
             float3 remainingMovementDirection = math.normalizesafe(characterBody.RelativeVelocity);
 
@@ -1485,9 +1487,10 @@ namespace Unity.CharacterController
                 if (CalculateDistanceAllCollisions(
                     in processor,
                     ref context,
-                    ref baseContext, 
+                    ref baseContext,
                     characterPosition,
                     characterRotation,
+                    characterScale,
                     0f,
                     characterProperties.ShouldIgnoreDynamicBodies(),
                     out NativeList<DistanceHit> overlapHits))
@@ -1502,12 +1505,12 @@ namespace Unity.CharacterController
                             if (characterProperties.EvaluateGrounding)
                             {
                                 isGroundedOnTmpHit = processor.IsGroundedOnHit(
-                                    ref context, 
+                                    ref context,
                                     ref baseContext,
-                                    in movementHit, 
+                                    in movementHit,
                                     (int)GroundingEvaluationType.InitialOverlaps);
                             }
-                            
+
                             // Add hit to projection hits
                             KinematicCharacterHit currentCharacterHit = KinematicCharacterUtilities.CreateCharacterHit(
                                 in movementHit,
@@ -1545,7 +1548,7 @@ namespace Unity.CharacterController
                     float castLength = remainingMovementLength + Constants.CollisionOffset; // TODO: shoud we keep this offset?
 
                     // Cast collider for movement
-                    ColliderCastInput castInput = new ColliderCastInput(characterPhysicsCollider.Value, castStartPosition, castStartPosition + (castDirection * castLength), characterRotation);
+                    ColliderCastInput castInput = new ColliderCastInput(characterPhysicsCollider.Value, castStartPosition, castStartPosition + (castDirection * castLength), characterRotation, characterScale);
                     baseContext.TmpColliderCastHits.Clear();
                     AllHitsCollector<ColliderCastHit> collector = new AllHitsCollector<ColliderCastHit>(1f, ref baseContext.TmpColliderCastHits);
                     baseContext.PhysicsWorld.CastCollider(castInput, ref collector);
@@ -1567,9 +1570,9 @@ namespace Unity.CharacterController
                         {
                             // Grounding calculation
                             isGroundedOnMovementHit = processor.IsGroundedOnHit(
-                                ref context, 
+                                ref context,
                                 ref baseContext,
-                                in movementHit, 
+                                in movementHit,
                                 (int)GroundingEvaluationType.MovementHit);
                         }
 
@@ -1660,7 +1663,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="originalVelocityDirection"> Direction of the character velocity before any projection of velocity happened on this update </param>
@@ -1669,14 +1672,16 @@ namespace Unity.CharacterController
         public void SolveOverlaps<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref KinematicCharacterBody characterBody,
             ref float3 characterPosition,
             float3 originalVelocityDirection) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             baseContext.TmpRigidbodyIndexesProcessed.Clear();
-            
-            quaternion characterRotation = LocalTransform.ValueRO.Rotation;
+
+            LocalTransform characterTransform = LocalTransform.ValueRO;
+            quaternion characterRotation =characterTransform.Rotation;
+            float characterScale = characterTransform.Scale;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
 
@@ -1685,7 +1690,7 @@ namespace Unity.CharacterController
             {
                 decollisionIterationsMade++;
 
-                ColliderDistanceInput distanceInput = new ColliderDistanceInput(characterPhysicsCollider.Value, 0f, math.RigidTransform(characterRotation, characterPosition));
+                ColliderDistanceInput distanceInput = new ColliderDistanceInput(characterPhysicsCollider.Value, 0f, math.RigidTransform(characterRotation, characterPosition), characterScale);
                 baseContext.TmpDistanceHits.Clear();
                 AllHitsCollector<DistanceHit> collector = new AllHitsCollector<DistanceHit>(distanceInput.MaxDistance, ref baseContext.TmpDistanceHits);
                 baseContext.PhysicsWorld.CalculateDistance(distanceInput, ref collector);
@@ -1715,9 +1720,9 @@ namespace Unity.CharacterController
                         if (characterProperties.EvaluateGrounding)
                         {
                             isGroundedOnHit = processor.IsGroundedOnHit(
-                                ref context, 
+                                ref context,
                                 ref baseContext,
-                                in basicDynamicHit, 
+                                in basicDynamicHit,
                                 (int)GroundingEvaluationType.OverlapDecollision);
                         }
 
@@ -1742,9 +1747,9 @@ namespace Unity.CharacterController
                             if (characterProperties.EvaluateGrounding)
                             {
                                 isGroundedOnChosenHit = processor.IsGroundedOnHit(
-                                    ref context, 
+                                    ref context,
                                     ref baseContext,
-                                    in basicChosenHit, 
+                                    in basicChosenHit,
                                     (int)GroundingEvaluationType.OverlapDecollision);
                             }
                         }
@@ -1752,7 +1757,7 @@ namespace Unity.CharacterController
                         DecollideFromHit(
                             in processor,
                             ref context,
-                            ref baseContext, 
+                            ref baseContext,
                             ref characterBody,
                             ref characterPosition,
                             in basicChosenHit,
@@ -1763,7 +1768,7 @@ namespace Unity.CharacterController
                             chosenHitIsDynamic,
                             true,
                             true);
-                        
+
                         foundHitForDecollision = true;
                     }
                 }
@@ -1812,16 +1817,16 @@ namespace Unity.CharacterController
                         if (characterProperties.EvaluateGrounding)
                         {
                             isGroundedOnHit = processor.IsGroundedOnHit(
-                                ref context, 
+                                ref context,
                                 ref baseContext,
-                                in basicChosenHit, 
+                                in basicChosenHit,
                                 (int)GroundingEvaluationType.OverlapDecollision);
                         }
 
                         DecollideFromHit(
                             in processor,
                             ref context,
-                            ref baseContext, 
+                            ref baseContext,
                             ref characterBody,
                             ref characterPosition,
                             in basicChosenHit,
@@ -1844,13 +1849,13 @@ namespace Unity.CharacterController
                 }
             }
         }
-        
+
         private void RecalculateDecollisionVector(ref float3 decollisionVector, float3 originalHitNormal, float3 newDecollisionDirection, float decollisionDistance)
         {
             float overlapDistance = math.max(decollisionDistance, 0f);
             if (overlapDistance > 0f)
             {
-                decollisionVector += MathUtilities.ReverseProjectOnVector(originalHitNormal * overlapDistance, newDecollisionDirection, overlapDistance * Constants.DefaultReverseProjectionMaxLengthRatio);
+                decollisionVector = MathUtilities.ReverseProjectOnVector(originalHitNormal * overlapDistance, newDecollisionDirection, overlapDistance * Constants.DefaultReverseProjectionMaxLengthRatio);
             }
         }
 
@@ -1859,7 +1864,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="hit"> The hit to decollide from </param>
@@ -1875,7 +1880,7 @@ namespace Unity.CharacterController
         public void DecollideFromHit<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref KinematicCharacterBody characterBody,
             ref float3 characterPosition,
             in BasicHit hit,
@@ -1887,25 +1892,26 @@ namespace Unity.CharacterController
             bool addToCharacterHits,
             bool projectVelocityOnHit) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
-            quaternion characterRotation = LocalTransform.ValueRO.Rotation;
-            
-            // Grounding considerations for decollision (modified decollision direction)
+            LocalTransform characterTransform = LocalTransform.ValueRO;
+            quaternion characterRotation = characterTransform.Rotation;
+            float characterScale = characterTransform.Scale;
+
             float3 decollisionDirection = hit.Normal;
             float3 decollisionVector = decollisionDirection * decollisionDistance;
+            // Always decollide vertically from grounded hits
             if (isGroundedOnHit)
             {
-                if (isGroundedOnHit && math.dot(characterBody.GroundingUp, hit.Normal) > Constants.MinDotRatioForVerticalDecollision)
+                if(math.dot(characterBody.GroundingUp, hit.Normal) > Constants.MinDotRatioForVerticalDecollision)
                 {
-                    // Always decollide vertically from grounded hits
                     decollisionDirection = characterBody.GroundingUp;
                     RecalculateDecollisionVector(ref decollisionVector, hit.Normal, decollisionDirection, decollisionDistance);
                 }
-                else if (characterBody.IsGrounded && !hitIsDynamic)
-                {
-                    // If we are grounded and hit is nongrounded, decollide horizontally on the plane of our ground normal
-                    decollisionDirection = math.normalizesafe(MathUtilities.ProjectOnPlane(decollisionDirection, characterBody.GroundHit.Normal));
-                    RecalculateDecollisionVector(ref decollisionVector, hit.Normal, decollisionDirection, decollisionDistance);
-                }
+            }
+            // If we are grounded and hit is nongrounded, decollide horizontally on the plane of our ground normal
+            else if (characterBody.IsGrounded && !hitIsDynamic)
+            {
+                decollisionDirection = math.normalizesafe(MathUtilities.ProjectOnPlane(decollisionDirection, characterBody.GroundHit.Normal));
+                RecalculateDecollisionVector(ref decollisionVector, hit.Normal, decollisionDirection, decollisionDistance);
             }
 
             // In simulateDynamic mode, before we decollide from a dynamic body, check if the decollision would be obstructed by anything other than the decollided body
@@ -1914,9 +1920,10 @@ namespace Unity.CharacterController
                 CastColliderClosestCollisions(
                     in processor,
                     ref context,
-                    ref baseContext, 
+                    ref baseContext,
                     characterPosition,
                     characterRotation,
+                    characterScale,
                     decollisionDirection,
                     decollisionDistance,
                     true,
@@ -1927,7 +1934,7 @@ namespace Unity.CharacterController
             {
                 // Move based on how far the obstruction was
                 characterPosition += decollisionDirection * closestHitDistance;
-                
+
                 // Displacement impulse
                 if (!baseContext.TmpRigidbodyIndexesProcessed.Contains(hit.RigidBodyIndex))
                 {
@@ -1977,7 +1984,7 @@ namespace Unity.CharacterController
                 CharacterHitsBuffer.Add(ovelapCharacterHit);
             }
         }
-        
+
         /// <summary>
         /// Determines if grounded status should be prevented, based on the velocity of the character as well as the velocity of the hit body, if any.
         /// </summary>
@@ -2006,9 +2013,9 @@ namespace Unity.CharacterController
                         out LocalTransform hitTransform,
                         out PhysicsVelocity hitPhysicsVelocity,
                         out PhysicsMass hitPhysicsMass);
-                    
+
                     float3 groundVelocityAtPoint = hitPhysicsVelocity.GetLinearVelocity(hitPhysicsMass, hitTransform.Position, hitTransform.Rotation, hit.Position);
-                    
+
                     float characterVelocityOnNormal = math.dot(relativeVelocity, hit.Normal);
                     float groundVelocityOnNormal = math.dot(groundVelocityAtPoint, hit.Normal);
 
@@ -2029,11 +2036,11 @@ namespace Unity.CharacterController
         }
 
         /// <summary>
-        /// Determines if step-handling considerations would make a character be grounded on a hit 
+        /// Determines if step-handling considerations would make a character be grounded on a hit
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hit"> The hit to decollide from </param>
         /// <param name="maxStepHeight"> The maximum height that the character can step over </param>
         /// <param name="extraStepChecksDistance"> The horizontal distance at which extra downward step-detection raycasts will be made, in order to allow stepping over steps that are slightly angled </param>
@@ -2048,10 +2055,9 @@ namespace Unity.CharacterController
             float maxStepHeight,
             float extraStepChecksDistance) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
-            
             KinematicCharacterBody characterBody = CharacterBody.ValueRO;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
-            
+
             if (maxStepHeight > 0f)
             {
                 bool isGroundedOnBackStep = false;
@@ -2062,7 +2068,7 @@ namespace Unity.CharacterController
                 bool backStepHitFound = RaycastClosestCollisions(
                     in processor,
                     ref context,
-                    ref baseContext, 
+                    ref baseContext,
                     hit.Position + (backCheckDirection * Constants.StepGroundingDetectionHorizontalOffset),
                     -characterBody.GroundingUp,
                     maxStepHeight,
@@ -2080,7 +2086,7 @@ namespace Unity.CharacterController
                     backStepHitFound = RaycastClosestCollisions(
                         in processor,
                         ref context,
-                        ref baseContext, 
+                        ref baseContext,
                         hit.Position + (backCheckDirection * extraStepChecksDistance),
                         -characterBody.GroundingUp,
                         maxStepHeight,
@@ -2176,13 +2182,13 @@ namespace Unity.CharacterController
 
             return false;
         }
-        
+
         /// <summary>
         /// Handles the stepping-up-a-step logic during character movement iterations
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="hit"> The hit to decollide from </param>
@@ -2211,8 +2217,10 @@ namespace Unity.CharacterController
             out bool hasSteppedUp) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             hasSteppedUp = false;
-            
-            quaternion characterRotation = LocalTransform.ValueRO.Rotation;
+
+            LocalTransform characterTransform = LocalTransform.ValueRO;
+            quaternion characterRotation = characterTransform.Rotation;
+            float characterScale = characterTransform.Scale;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
 
             // Step up hits (only needed if not grounded on that hit)
@@ -2230,9 +2238,10 @@ namespace Unity.CharacterController
                 bool foundUpStepHit = CastColliderClosestCollisions(
                     in processor,
                     ref context,
-                    ref baseContext, 
+                    ref baseContext,
                     startPositionOfUpCheck,
                     characterRotation,
+                    characterScale,
                     upCheckDirection,
                     upCheckDistance,
                     true,
@@ -2266,9 +2275,10 @@ namespace Unity.CharacterController
                     bool foundForwardStepHit = CastColliderClosestCollisions(
                         in processor,
                         ref context,
-                        ref baseContext, 
+                        ref baseContext,
                         startPositionOfForwardCheck,
                         characterRotation,
+                        characterScale,
                         forwardCheckDirection,
                         forwardCheckDistance,
                         true,
@@ -2295,9 +2305,10 @@ namespace Unity.CharacterController
                         bool foundDownStepHit = CastColliderClosestCollisions(
                             in processor,
                             ref context,
-                            ref baseContext, 
+                            ref baseContext,
                             startPositionOfDownCheck,
                             characterRotation,
+                            characterScale,
                             downCheckDirection,
                             downCheckDistance,
                             true,
@@ -2312,24 +2323,24 @@ namespace Unity.CharacterController
                             if (characterProperties.EvaluateGrounding)
                             {
                                 isGroundedOnStepHit = processor.IsGroundedOnHit(
-                                    ref context, 
+                                    ref context,
                                     ref baseContext,
-                                    in stepHit, 
+                                    in stepHit,
                                     (int)GroundingEvaluationType.StepUpHit);
                             }
 
                             if (isGroundedOnStepHit)
-                            {  
+                            {
                                 float hitHeight = upStepHitDistance - downStepHitDistance;
                                 float steppedHeight = hitHeight;
                                 steppedHeight = math.max(0f, steppedHeight + Constants.CollisionOffset);
-                                    
+
                                 // Add slope & character width consideration to stepped height
                                 if(characterWidthForStepGroundingCheck > 0f)
                                 {
                                     // Find the effective slope normal
                                     float3 forwardSlopeCheckDirection =  -math.normalizesafe(math.cross(math.cross(characterBody.GroundingUp, stepHit.Normal), stepHit.Normal));
-                                    
+
                                     if (RaycastClosestCollisions(
                                             in processor,
                                             ref context,
@@ -2347,7 +2358,7 @@ namespace Unity.CharacterController
                                         steppedHeight += extraHeightFromAngleAndCharacterWidth;
                                     }
                                 }
-                                
+
                                 if (steppedHeight < maxStepHeight)
                                 {
                                     // Step up
@@ -2362,7 +2373,7 @@ namespace Unity.CharacterController
                                     characterBody.RelativeVelocity = MathUtilities.ProjectOnPlane(characterBody.RelativeVelocity, characterBody.GroundingUp);
                                     remainingMovementDirection = math.normalizesafe(characterBody.RelativeVelocity);
                                     remainingMovementLength -= forwardStepHitDistance;
-                                    
+
                                     // Replace hit with step hit
                                     hit = KinematicCharacterUtilities.CreateCharacterHit(stepHit, characterBody.IsGrounded, characterVelocityBeforeHit, isGroundedOnStepHit);
                                     hit.CharacterVelocityAfterHit = characterBody.RelativeVelocity;
@@ -2381,7 +2392,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="verticalOffset"> Vertical upwards distance where detection raycasts will begin </param>
         /// <param name="downDetectionDepth"> Distance of downwards slope detection raycasts </param>
         /// <param name="deltaTimeIntoFuture"> Time delta into future to detect slopes at with the current character velocity </param>
@@ -2402,7 +2413,7 @@ namespace Unity.CharacterController
             float downDetectionDepth,
             float deltaTimeIntoFuture,
             float secondaryNoGroundingCheckDistance,
-            bool stepHandling, 
+            bool stepHandling,
             float maxStepHeight,
             out bool isMovingTowardsNoGrounding,
             out bool foundSlopeHit,
@@ -2414,9 +2425,9 @@ namespace Unity.CharacterController
             futureSlopeChangeAnglesRadians = 0f;
             futureSlopeHit = default;
 
-            KinematicCharacterBody characterBody = CharacterBody.ValueRO; 
+            KinematicCharacterBody characterBody = CharacterBody.ValueRO;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
-            
+
             if (IsGroundedOnSlopeNormal(characterProperties.MaxGroundedSlopeDotProduct, characterBody.GroundHit.Normal, characterBody.GroundingUp))
             {
                 if(stepHandling)
@@ -2435,11 +2446,11 @@ namespace Unity.CharacterController
 
                 if (rayLength > math.EPSILON)
                 {
-                    // Raycast forward 
+                    // Raycast forward
                     bool forwardHitFound = RaycastClosestCollisions(
                         in processor,
                         ref context,
-                        ref baseContext, 
+                        ref baseContext,
                         rayStartPoint,
                         rayDirection,
                         rayLength,
@@ -2459,11 +2470,11 @@ namespace Unity.CharacterController
                         rayDirection = -characterBody.GroundingUp;
                         rayLength = downDetectionDepth;
 
-                        // Raycast down 
+                        // Raycast down
                         bool downHitFound = RaycastClosestCollisions(
                             in processor,
                             ref context,
-                            ref baseContext, 
+                            ref baseContext,
                             rayStartPoint,
                             rayDirection,
                             rayLength,
@@ -2495,7 +2506,7 @@ namespace Unity.CharacterController
                             bool secondDownHitFound = RaycastClosestCollisions(
                                 in processor,
                                 ref context,
-                                ref baseContext, 
+                                ref baseContext,
                                 rayStartPoint,
                                 rayDirection,
                                 rayLength,
@@ -2527,14 +2538,14 @@ namespace Unity.CharacterController
                                 bool backHitFound = RaycastClosestCollisions(
                                     in processor,
                                     ref context,
-                                    ref baseContext, 
+                                    ref baseContext,
                                     rayStartPoint,
                                     rayDirection,
                                     rayLength,
                                     characterProperties.ShouldIgnoreDynamicBodies(),
                                     out RaycastHit backHit,
-                                    out float backHitDistance); 
-                                
+                                    out float backHitDistance);
+
                                 if (backHitFound)
                                 {
                                     foundSlopeHit = true;
@@ -2552,7 +2563,7 @@ namespace Unity.CharacterController
                 }
             }
         }
-        
+
         /// <summary>
         /// Determines if the slope angle is within grounded tolerance
         /// </summary>
@@ -2574,31 +2585,34 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="movement"> The movement vector of the character </param>
         /// <param name="hit"> The hit to decollide from </param>
         /// <typeparam name="T"> The type of the struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </typeparam>
         /// <typeparam name="C"> The type of the user-created context struct </typeparam>
         /// <returns> Whether or not a non-grounded obstruction would be hit with the designated movement </returns>
         public bool MovementWouldHitNonGroundedObstruction<T, C>(
-            in T processor, 
-            ref C context, 
+            in T processor,
+            ref C context,
             ref KinematicCharacterUpdateContext baseContext,
             float3 movement,
             out ColliderCastHit hit) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             hit = default;
-            
-            quaternion characterRotation = LocalTransform.ValueRO.Rotation;
-            float3 characterPosition = LocalTransform.ValueRO.Position;
+
+            LocalTransform characterTransform = LocalTransform.ValueRO;
+            quaternion characterRotation = characterTransform.Rotation;
+            float3 characterPosition = characterTransform.Position;
+            float characterScale = characterTransform.Scale;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
-            
+
             if (CastColliderClosestCollisions(
                 in processor,
                 ref context,
-                ref baseContext, 
+                ref baseContext,
                 characterPosition,
                 characterRotation,
+                characterScale,
                 math.normalizesafe(movement),
                 math.length(movement),
                 true,
@@ -2609,9 +2623,9 @@ namespace Unity.CharacterController
                 if (characterProperties.EvaluateGrounding)
                 {
                     if (!processor.IsGroundedOnHit(
-                            ref context, 
+                            ref context,
                             ref baseContext,
-                            new BasicHit(hit), 
+                            new BasicHit(hit),
                             (int)GroundingEvaluationType.Default))
                     {
                         return true;
@@ -2625,12 +2639,12 @@ namespace Unity.CharacterController
         /// <summary>
         /// Called on every character physics update in order to set a parent body for the character
         /// </summary>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="parentEntity"> The parent entity of the character </param>
         /// <param name="anchorPointLocalParentSpace"> The contact point between character and parent, in the parent's local space, around which the character will be rotated </param>
         public void SetOrUpdateParentBody(
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref KinematicCharacterBody characterBody,
             Entity parentEntity,
             float3 anchorPointLocalParentSpace)
@@ -2646,7 +2660,7 @@ namespace Unity.CharacterController
                 characterBody.ParentLocalAnchorPoint = default;
             }
         }
-        
+
         /// <summary>
         /// Determines the effective signed slope angle of a hit based on character movement direction (negative sign means downward)
         /// </summary>
@@ -2676,7 +2690,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hit"> The hit to decollide from </param>
         /// <param name="stepAndSlopeHandling"> Whether or not step-handling is enabled </param>
         /// <param name="groundingEvaluationType"> Identifier for the type of grounding evaluation that's being requested </param>
@@ -2686,14 +2700,14 @@ namespace Unity.CharacterController
         public bool Default_IsGroundedOnHit<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             in BasicHit hit,
             in BasicStepAndSlopeHandlingParameters stepAndSlopeHandling,
             int groundingEvaluationType) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
             KinematicCharacterBody characterBody = CharacterBody.ValueRO;
-            
+
             PhysicsWorld physicsWorld = baseContext.PhysicsWorld;
             if (ShouldPreventGroundingBasedOnVelocity(in physicsWorld, in hit, characterBody.WasGroundedBeforeCharacterUpdate, characterBody.RelativeVelocity))
             {
@@ -2726,7 +2740,7 @@ namespace Unity.CharacterController
 
             return isGroundedOnSlope || isGroundedOnSteps;
         }
-        
+
         /// <summary>
         /// Default implementation of the "UpdateGroundingUp" processor callback. Sets the character ground up to the character transform's up direction
         /// </summary>
@@ -2734,7 +2748,7 @@ namespace Unity.CharacterController
         public void Default_UpdateGroundingUp(ref KinematicCharacterBody characterBody)
         {
             quaternion characterRotation = LocalTransform.ValueRO.Rotation;
-        
+
             // GroundingUp must be a normalized vector representing the "up" direction that we use to evaluate slope angles with.
             // By default this is the up direction of the character transform
             characterBody.GroundingUp = MathUtilities.GetUpFromRotation(characterRotation);
@@ -2913,13 +2927,13 @@ namespace Unity.CharacterController
                 }
             }
         }
-        
+
         /// <summary>
         /// Default implementation of the "OnMovementHit" processor callback
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterBody"> The character body component </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="hit"> The hit to decollide from </param>
@@ -2935,7 +2949,7 @@ namespace Unity.CharacterController
         public void Default_OnMovementHit<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref KinematicCharacterBody characterBody,
             ref float3 characterPosition,
             ref KinematicCharacterHit hit,
@@ -2949,14 +2963,14 @@ namespace Unity.CharacterController
         {
             bool hasSteppedUp = false;
 
-            if (stepHandling && 
+            if (stepHandling &&
                 !hit.IsGroundedOnHit &&
                 math.dot(math.normalizesafe(characterBody.RelativeVelocity), characterBody.GroundingUp) > Constants.MinVelocityDotRatioWithGroundingUpForSteppingUpHits)
             {
                 CheckForSteppingUpHit(
                     in processor,
                     ref context,
-                    ref baseContext, 
+                    ref baseContext,
                     ref characterBody,
                     ref characterPosition,
                     ref hit,
@@ -2968,7 +2982,7 @@ namespace Unity.CharacterController
                     characterWidthForStepGroundingCheck,
                     out hasSteppedUp);
             }
-            
+
             // Add velocityProjection hits only after potential correction from step handling
             VelocityProjectionHits.Add(new KinematicVelocityProjectionHit(hit));
 
@@ -2989,22 +3003,23 @@ namespace Unity.CharacterController
                     ref characterBody.GroundHit,
                     in VelocityProjectionHits,
                     originalVelocityDirection);
-                
+
                 // Recalculate remaining movement after projection
                 float projectedVelocityLengthFactor = math.length(characterBody.RelativeVelocity) / math.length(velocityBeforeProjection);
                 remainingMovementLength *= projectedVelocityLengthFactor;
                 remainingMovementDirection = math.normalizesafe(characterBody.RelativeVelocity);
             }
         }
-        
+
         /// <summary>
-        /// Casts the character collider and only returns the closest collideable hit 
+        /// Casts the character collider and only returns the closest collideable hit
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="characterRotation"> The rotation of the character</param>
+        /// <param name="characterScale"> The uniform scale of the character</param>
         /// <param name="direction"> The direction of the case </param>
         /// <param name="length"> The length of the cast </param>
         /// <param name="onlyObstructingHits"> Should the cast only detect hits whose normal is opposed to the direction of the cast </param>
@@ -3017,9 +3032,10 @@ namespace Unity.CharacterController
         public bool CastColliderClosestCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             float3 characterPosition,
             quaternion characterRotation,
+            float characterScale,
             float3 direction,
             float length,
             bool onlyObstructingHits,
@@ -3028,8 +3044,8 @@ namespace Unity.CharacterController
             out float hitDistance) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
-            
-            ColliderCastInput castInput = new ColliderCastInput(characterPhysicsCollider.Value, characterPosition, characterPosition + (direction * length), characterRotation);
+
+            ColliderCastInput castInput = new ColliderCastInput(characterPhysicsCollider.Value, characterPosition, characterPosition + (direction * length), characterRotation, characterScale);
             baseContext.TmpColliderCastHits.Clear();
             AllHitsCollector<ColliderCastHit> collector = new AllHitsCollector<ColliderCastHit>(1f, ref baseContext.TmpColliderCastHits);
             baseContext.PhysicsWorld.CastCollider(castInput, ref collector);
@@ -3046,13 +3062,14 @@ namespace Unity.CharacterController
         }
 
         /// <summary>
-        /// Casts the character collider and returns all collideable hit 
+        /// Casts the character collider and returns all collideable hit
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="characterRotation"> The rotation of the character</param>
+        /// <param name="characterScale"> The uniform scale of the character</param>
         /// <param name="direction"> The direction of the case </param>
         /// <param name="length"> The length of the cast </param>
         /// <param name="onlyObstructingHits"> Should the cast only detect hits whose normal is opposed to the direction of the cast </param>
@@ -3064,9 +3081,10 @@ namespace Unity.CharacterController
         public bool CastColliderAllCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             float3 characterPosition,
             quaternion characterRotation,
+            float characterScale,
             float3 direction,
             float length,
             bool onlyObstructingHits,
@@ -3076,7 +3094,7 @@ namespace Unity.CharacterController
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
             hits = baseContext.TmpColliderCastHits;
 
-            ColliderCastInput castInput = new ColliderCastInput(characterPhysicsCollider.Value, characterPosition, characterPosition + (direction * length), characterRotation);
+            ColliderCastInput castInput = new ColliderCastInput(characterPhysicsCollider.Value, characterPosition, characterPosition + (direction * length), characterRotation, characterScale);
             baseContext.TmpColliderCastHits.Clear();
             AllHitsCollector<ColliderCastHit> collector = new AllHitsCollector<ColliderCastHit>(1f, ref baseContext.TmpColliderCastHits);
             baseContext.PhysicsWorld.CastCollider(castInput, ref collector);
@@ -3089,11 +3107,11 @@ namespace Unity.CharacterController
         }
 
         /// <summary>
-        /// Casts a ray and only returns the closest collideable hit 
+        /// Casts a ray and only returns the closest collideable hit
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="startPoint"> The cast start point </param>
         /// <param name="direction"> The direction of the case </param>
         /// <param name="length"> The length of the cast </param>
@@ -3106,7 +3124,7 @@ namespace Unity.CharacterController
         public bool RaycastClosestCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             float3 startPoint,
             float3 direction,
             float length,
@@ -3115,7 +3133,7 @@ namespace Unity.CharacterController
             out float hitDistance) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
-            
+
             RaycastInput castInput = new RaycastInput
             {
                 Start = startPoint,
@@ -3139,11 +3157,11 @@ namespace Unity.CharacterController
 
 
         /// <summary>
-        /// Casts a ray and returns all collideable hits 
+        /// Casts a ray and returns all collideable hits
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="startPoint"> The cast start point </param>
         /// <param name="direction"> The direction of the case </param>
         /// <param name="length"> The length of the cast </param>
@@ -3155,7 +3173,7 @@ namespace Unity.CharacterController
         public bool RaycastAllCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             float3 startPoint,
             float3 direction,
             float length,
@@ -3181,15 +3199,16 @@ namespace Unity.CharacterController
 
             return false;
         }
-        
+
         /// <summary>
-        /// Calculates distance from the character collider and only returns the closest collideable hit 
+        /// Calculates distance from the character collider and only returns the closest collideable hit
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="characterRotation"> The rotation of the character</param>
+        /// <param name="characterScale"> The uniform scale of the character</param>
         /// <param name="maxDistance"> The direction of the case </param>
         /// <param name="ignoreDynamicBodies"> Should the cast ignore dynamic bodies </param>
         /// <param name="hit"> The closest detected hit </param>
@@ -3199,16 +3218,17 @@ namespace Unity.CharacterController
         public bool CalculateDistanceClosestCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             float3 characterPosition,
             quaternion characterRotation,
+            float characterScale,
             float maxDistance,
             bool ignoreDynamicBodies,
             out DistanceHit hit) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
-            
-            ColliderDistanceInput distanceInput = new ColliderDistanceInput(characterPhysicsCollider.Value, maxDistance, math.RigidTransform(characterRotation, characterPosition));
+
+            ColliderDistanceInput distanceInput = new ColliderDistanceInput(characterPhysicsCollider.Value, maxDistance, math.RigidTransform(characterRotation, characterPosition), characterScale);
             baseContext.TmpDistanceHits.Clear();
             AllHitsCollector<DistanceHit> collector = new AllHitsCollector<DistanceHit>(distanceInput.MaxDistance, ref baseContext.TmpDistanceHits);
             baseContext.PhysicsWorld.CalculateDistance(distanceInput, ref collector);
@@ -3227,9 +3247,10 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="characterRotation"> The rotation of the character</param>
+        /// <param name="characterScale"> The uniform scale of the character</param>
         /// <param name="maxDistance"> The direction of the case </param>
         /// <param name="ignoreDynamicBodies"> Should the cast ignore dynamic bodies </param>
         /// <param name="hits"> The detected hits </param>
@@ -3239,9 +3260,10 @@ namespace Unity.CharacterController
         public bool CalculateDistanceAllCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             float3 characterPosition,
             quaternion characterRotation,
+            float characterScale,
             float maxDistance,
             bool ignoreDynamicBodies,
             out NativeList<DistanceHit> hits) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
@@ -3249,7 +3271,7 @@ namespace Unity.CharacterController
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
             hits = baseContext.TmpDistanceHits;
 
-            ColliderDistanceInput distanceInput = new ColliderDistanceInput(characterPhysicsCollider.Value, maxDistance, math.RigidTransform(characterRotation, characterPosition));
+            ColliderDistanceInput distanceInput = new ColliderDistanceInput(characterPhysicsCollider.Value, maxDistance, math.RigidTransform(characterRotation, characterPosition), characterScale);
             baseContext.TmpDistanceHits.Clear();
             AllHitsCollector<DistanceHit> collector = new AllHitsCollector<DistanceHit>(distanceInput.MaxDistance, ref baseContext.TmpDistanceHits);
             baseContext.PhysicsWorld.CalculateDistance(distanceInput, ref collector);
@@ -3260,13 +3282,13 @@ namespace Unity.CharacterController
 
             return false;
         }
-        
+
         /// <summary>
-        /// Filters a list of hits for ground probing and returns the closest valid hit 
+        /// Filters a list of hits for ground probing and returns the closest valid hit
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hits"> The list of hits to filter </param>
         /// <param name="castDirection"> The direction of the ground probing cast </param>
         /// <param name="ignoreDynamicBodies"> Should the cast ignore dynamic bodies </param>
@@ -3277,7 +3299,7 @@ namespace Unity.CharacterController
         public bool FilterColliderCastHitsForGroundProbing<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref NativeList<ColliderCastHit> hits,
             float3 castDirection,
             bool ignoreDynamicBodies,
@@ -3320,13 +3342,13 @@ namespace Unity.CharacterController
 
             return closestHit.Entity != Entity.Null;
         }
-        
+
         /// <summary>
         /// Filters a list of hits for character movement and returns the closest valid hit
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hits"> The list of hits to filter </param>
         /// <param name="characterIsKinematic"> Is the character kinematic (as opposed to simulated dynamic) </param>
         /// <param name="castDirection"> The direction of the ground probing cast </param>
@@ -3340,7 +3362,7 @@ namespace Unity.CharacterController
         public bool FilterColliderCastHitsForMove<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref NativeList<ColliderCastHit> hits,
             bool characterIsKinematic,
             float3 castDirection,
@@ -3353,7 +3375,7 @@ namespace Unity.CharacterController
             closestHit = default;
             closestHit.Fraction = float.MaxValue;
             float dotRatioOfSelectedHit = float.MaxValue;
-            
+
             for (int i = hits.Length - 1; i >= 0; i--)
             {
                 var hit = hits[i];
@@ -3397,13 +3419,13 @@ namespace Unity.CharacterController
 
             return closestHit.Entity != Entity.Null;
         }
-        
+
         /// <summary>
         /// Filters a list of hits and returns the closest valid hit
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hits"> The list of hits to filter </param>
         /// <param name="onlyObstructingHits"> Should the cast only detect hits whose normal is opposed to the direction of the cast </param>
         /// <param name="castDirection"> The direction of the ground probing cast </param>
@@ -3415,7 +3437,7 @@ namespace Unity.CharacterController
         public bool FilterColliderCastHitsForClosestCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref NativeList<ColliderCastHit> hits,
             bool onlyObstructingHits,
             float3 castDirection,
@@ -3424,7 +3446,7 @@ namespace Unity.CharacterController
         {
             closestHit = default;
             closestHit.Fraction = float.MaxValue;
-            
+
             for (int i = 0; i < hits.Length; i++)
             {
                 var hit = hits[i];
@@ -3449,13 +3471,13 @@ namespace Unity.CharacterController
 
             return closestHit.Entity != Entity.Null;
         }
-        
+
         /// <summary>
         /// Filters a list of hits and keeps only valid hits
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hits"> The list of hits to filter </param>
         /// <param name="onlyObstructingHits"> Should the cast only detect hits whose normal is opposed to the direction of the cast </param>
         /// <param name="castDirection"> The direction of the ground probing cast </param>
@@ -3466,7 +3488,7 @@ namespace Unity.CharacterController
         public bool FilterColliderCastHitsForAllCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref NativeList<ColliderCastHit> hits,
             bool onlyObstructingHits,
             float3 castDirection,
@@ -3499,13 +3521,13 @@ namespace Unity.CharacterController
 
             return hits.Length > 0;
         }
-        
+
         /// <summary>
         /// Filters a list of hits for overlap resolution, and keeps only valid hits. Also returns a variety of closest hits
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hits"> The list of hits to filter </param>
         /// <param name="closestHit"> The closest valid hit </param>
         /// <param name="closestDynamicHit"> The closest valid dynamic hit </param>
@@ -3515,7 +3537,7 @@ namespace Unity.CharacterController
         public void FilterDistanceHitsForSolveOverlaps<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref NativeList<DistanceHit> hits,
             out DistanceHit closestHit,
             out DistanceHit closestDynamicHit,
@@ -3527,7 +3549,7 @@ namespace Unity.CharacterController
             closestDynamicHit.Fraction = float.MaxValue;
             closestNonDynamicHit = default;
             closestNonDynamicHit.Fraction = float.MaxValue;
-            
+
             for (int i = hits.Length - 1; i >= 0; i--)
             {
                 bool hitAccepted = false;
@@ -3565,13 +3587,13 @@ namespace Unity.CharacterController
                 }
             }
         }
-        
+
         /// <summary>
         /// Filters a list of hits and returns the closest valid hit
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hits"> The list of hits to filter </param>
         /// <param name="ignoreDynamicBodies"> Should the cast ignore dynamic bodies </param>
         /// <param name="closestHit"> The closest valid hit </param>
@@ -3581,14 +3603,14 @@ namespace Unity.CharacterController
         public bool FilterDistanceHitsForClosestCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref NativeList<DistanceHit> hits,
             bool ignoreDynamicBodies,
             out DistanceHit closestHit) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             closestHit = default;
             closestHit.Fraction = float.MaxValue;
-            
+
             for (int i = 0; i < hits.Length; i++)
             {
                 var hit = hits[i];
@@ -3609,13 +3631,13 @@ namespace Unity.CharacterController
 
             return closestHit.Entity != Entity.Null;
         }
-        
+
         /// <summary>
         /// Filters a list of hits and returns all valid hits
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hits"> The list of hits to filter </param>
         /// <param name="ignoreDynamicBodies"> Should the cast ignore dynamic bodies </param>
         /// <typeparam name="T"> The type of the struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </typeparam>
@@ -3624,7 +3646,7 @@ namespace Unity.CharacterController
         public bool FilterDistanceHitsForAllCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref NativeList<DistanceHit> hits,
             bool ignoreDynamicBodies) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
@@ -3651,13 +3673,13 @@ namespace Unity.CharacterController
 
             return hits.Length > 0;
         }
-        
+
         /// <summary>
         /// Filters a list of hits and returns the closest valid hit
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hits"> The list of hits to filter </param>
         /// <param name="ignoreDynamicBodies"> Should the cast ignore dynamic bodies </param>
         /// <param name="closestHit"> The closest valid hit </param>
@@ -3667,14 +3689,14 @@ namespace Unity.CharacterController
         public bool FilterRaycastHitsForClosestCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref NativeList<RaycastHit> hits,
             bool ignoreDynamicBodies,
             out RaycastHit closestHit) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             closestHit = default;
             closestHit.Fraction = float.MaxValue;
-            
+
             for (int i = 0; i < hits.Length; i++)
             {
                 var hit = hits[i];
@@ -3696,13 +3718,13 @@ namespace Unity.CharacterController
             return closestHit.Entity != Entity.Null;
         }
 
-        
+
         /// <summary>
         /// Filters a list of hits and returns all valid hits
         /// </summary>
         /// <param name="processor"> The struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </param>
         /// <param name="context"> The user context struct holding global data meant to be accessed during the character update </param>
-        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param> 
+        /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hits"> The list of hits to filter </param>
         /// <param name="ignoreDynamicBodies"> Should the cast ignore dynamic bodies </param>
         /// <typeparam name="T"> The type of the struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </typeparam>
@@ -3711,7 +3733,7 @@ namespace Unity.CharacterController
         public bool FilterRaycastHitsForAllCollisions<T, C>(
             in T processor,
             ref C context,
-            ref KinematicCharacterUpdateContext baseContext, 
+            ref KinematicCharacterUpdateContext baseContext,
             ref NativeList<RaycastHit> hits,
             bool ignoreDynamicBodies) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {

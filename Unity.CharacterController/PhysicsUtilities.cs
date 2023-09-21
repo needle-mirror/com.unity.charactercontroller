@@ -53,7 +53,7 @@ namespace Unity.CharacterController
         /// <param name="rigidbodyIndex"> The body index </param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe static bool DoesBodyHavePhysicsVelocityAndMass(in PhysicsWorld physicsWorld, int rigidbodyIndex)
+        public static bool DoesBodyHavePhysicsVelocityAndMass(in PhysicsWorld physicsWorld, int rigidbodyIndex)
         {
             if (rigidbodyIndex < physicsWorld.NumDynamicBodies)
             {
@@ -70,7 +70,7 @@ namespace Unity.CharacterController
         /// <param name="rigidbodyIndex"> The body index </param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe static bool IsBodyDynamic(in PhysicsWorld physicsWorld, int rigidbodyIndex)
+        public static bool IsBodyDynamic(in PhysicsWorld physicsWorld, int rigidbodyIndex)
         {
             if (DoesBodyHavePhysicsVelocityAndMass(in physicsWorld, rigidbodyIndex))
             {
@@ -172,7 +172,7 @@ namespace Unity.CharacterController
         /// <param name="material"> The physics material </param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe static bool IsCollidable(in Material material)
+        public static bool IsCollidable(in Material material)
         {
             if (material.CollisionResponse == CollisionResponsePolicy.Collide ||
                 material.CollisionResponse == CollisionResponsePolicy.CollideRaiseCollisionEvents)
@@ -191,7 +191,7 @@ namespace Unity.CharacterController
         /// <param name="collisionResponse"> The desired collision response </param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe static bool SetCollisionResponse(RigidBody rigidBody, ColliderKey colliderKey, CollisionResponsePolicy collisionResponse)
+        public static unsafe bool SetCollisionResponse(RigidBody rigidBody, ColliderKey colliderKey, CollisionResponsePolicy collisionResponse)
         {
             if (rigidBody.Collider.Value.GetLeaf(colliderKey, out ChildCollider leafCollider))
             {
@@ -207,9 +207,8 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="rigidBody"> The rigidbody to change </param>
         /// <param name="collisionResponse"> The desired collision response </param>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe static void SetCollisionResponse(RigidBody rigidBody, CollisionResponsePolicy collisionResponse)
+        public static unsafe void SetCollisionResponse(RigidBody rigidBody, CollisionResponsePolicy collisionResponse)
         {
             ((Collider*)rigidBody.Collider.GetUnsafePtr())->SetCollisionResponse(collisionResponse);
         }

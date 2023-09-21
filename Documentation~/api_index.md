@@ -32,7 +32,6 @@ This page contains an overview of some key APIs of the Character Controller pack
 | **Systems** | **Description**|
 | :--- | :--- |
 | [KinematicCharacterPhysicsUpdateGroup](xref:Unity.CharacterController.KinematicCharacterPhysicsUpdateGroup) | Provides a sensible default update point for fixed-rate character physics update systems (used by Standard Characters). |
-| [KinematicCharacterVariableUpdateGroup](xref:Unity.CharacterController.KinematicCharacterVariableUpdateGroup) | Provides a sensible default update point for variable-rate character update systems (used by Standard Characters). |
 | [KinematicCharacterDeferredImpulsesSystem](xref:Unity.CharacterController.KinematicCharacterDeferredImpulsesSystem) | Handles applying impulses stored in the [KinematicCharacterDeferredImpulse](xref:Unity.CharacterController.KinematicCharacterDeferredImpulse) buffer, after the character update. |
 | [StoreKinematicCharacterBodyPropertiesSystem](xref:Unity.CharacterController.StoreKinematicCharacterBodyPropertiesSystem) | Handles storing character data in the [StoredKinematicCharacterData](xref:Unity.CharacterController.StoredKinematicCharacterData) component. This allows deterministic parallel execution of the character update. |
 | [TrackedTransformFixedSimulationSystem](xref:Unity.CharacterController.TrackedTransformFixedSimulationSystem) | Handles storing "previous transform" data in all [TrackedTransform](xref:Unity.CharacterController.TrackedTransform) components. |

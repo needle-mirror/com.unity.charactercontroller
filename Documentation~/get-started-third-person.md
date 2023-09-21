@@ -12,5 +12,5 @@ To set up a third-person standard character, perform the following steps:
     ![Screenshot](./images/third-person-authoring-script.jpg)
 1. Navigate to the `Samples/Character Controller/[version]/Standard Characters/Common/Scripts/Camera` folder. Drag the `MainEntityCameraAuthoring` script onto the **OrbitCamera** GameObject: 
     ![[Screenshot]](./images/third-person-view-script.jpg)
-1. Make sure your scene has a camera GameObject that isn't in a subscene. Drag the `MainGameObjectCameraAuthoring` script onto the camera. This component marks the camera as the GameObject that must copy the entity marked with `MainEntityCameraAuthoring` every frame: 
+1. Make sure your scene has a camera GameObject that isn't in a subscene. Drag the `MainGameObjectCamera` script onto the camera. This component marks the camera as the GameObject that must copy the entity marked with `MainEntityCameraAuthoring` every frame: 
     ![Screenshot](./images/first-person-camera-script.jpg)

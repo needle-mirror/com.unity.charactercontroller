@@ -17,7 +17,7 @@ public class ThirdPersonPlayerAuthoring : MonoBehaviour
                 ControlledCharacter = GetEntity(authoring.ControlledCharacter, TransformUsageFlags.Dynamic),
                 ControlledCamera = GetEntity(authoring.ControlledCamera, TransformUsageFlags.Dynamic),
             });
-            AddComponent(entity, new ThirdPersonPlayerInputs());
+            AddComponent<ThirdPersonPlayerInputs>(entity);
         }
     }
 }

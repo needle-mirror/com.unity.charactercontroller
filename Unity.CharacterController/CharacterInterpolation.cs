@@ -15,17 +15,20 @@ namespace Unity.CharacterController
     public struct CharacterInterpolation : IComponentData
     {
         // These fields have to be in this order, because we copy memory to it
-        
+
         /// <summary>
-        /// The "previous" transform to interpolate from 
+        /// The "previous" transform to interpolate from
         /// </summary>
         public RigidTransform InterpolationFromTransform;
         /// <summary>
         /// Flags for skipping interpolation
         /// </summary>
         public byte InterpolationSkipping;
-        private byte DefaultByte;
-        
+        /// <summary>
+        /// Used for flags reset with mem copy
+        /// </summary>
+        internal byte DefaultByte;
+
         /// <summary>
         /// Whether or not to interpolate position
         /// </summary>
