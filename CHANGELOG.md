@@ -1,8 +1,19 @@
 # Changelog
 
-## [1.1.0-exp.10] - 2023-09-21
+
+## [1.2.0-pre.2] - 2024-05-30
+
+### Changed
+* Updated package dependencies
 
 ### Added
+* Added new version of `KinematicCharacterUtilities.BakeCharacter` that takes an `IBaker` as parameter, as opposed to a `Baker<T>`
+
+### Removed
+* Removed the `RotateAroundPoint` method of `MathUtilities`, which was unused by the package.
+
+
+## [1.1.0-exp.10] - 2023-09-21
 
 ### Changed
 * Refactoring of "Standard Characters" sample in order to make them easier to convert to netcode.
@@ -20,8 +31,6 @@
     * `[UpdateInGroup(typeof(SimulationSystemGroup))]`
     * `[UpdateAfter(typeof(FixedStepSimulationSystemGroup))]`
     * `[UpdateBefore(typeof(TransformSystemGroup))]`
-
-### Security
 
 
 ## [1.0.0-exp.22] - 2023-05-11

@@ -1,13 +1,13 @@
 {
   "name": "com.unity.charactercontroller",
   "displayName": "Character Controller",
-  "version": "1.1.0-exp.10",
+  "version": "1.2.0-pre.2",
   "unity": "2022.3",
-  "unityRelease": "0f1",
+  "unityRelease": "11f1",
   "description": "This package provides a customizable character controller solution for Entities. \n\n Navigate to the \"Samples\" tab in order to download the \"Standard Characters\", which serve as a starting point for implementing your own characters.",
   "dependencies": {
-    "com.unity.entities": "1.1.0-pre.3",
-    "com.unity.physics": "1.1.0-pre.3",
+    "com.unity.entities": "1.2.0",
+    "com.unity.physics": "1.2.0",
     "com.unity.modules.uielements": "1.0.0",
     "com.unity.modules.physics": "1.0.0"
   },
@@ -26,15 +26,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n### Changed\n* Refactoring of \"Standard Characters\" sample in order to make them easier to convert to netcode.\n* Uniform scaling of character entities at runtime, using the `LocalTransform.Scale` value, is now supported. Note that since characters are physics objects, any uniform scale set in authoring will be baked to an entity with a `LocalTransform.Scale` of 1.\n* `KinematicCharacterAspect` query functions now take character scale as parameter.\n* Removed core character components from the required entity query for character interpolation system updates. This allows any entity with `CharacterInterpolation` and transform components to re-use the character's interpolation strategy.\n\n### Fixed\n* Added checks to validate the presence of components on entities before accessing them in `KinematicCharacterDeferredImpulsesJob`\n* Changed fixed-step character interpolation job to take into account only entities with the enabled `Simulate` component (fixed interpolation issue in netcode contexts).\n* Fixed an incorrect calculation of character decollision vectors under certain circumstances.\n\n### Removed\n* The `KinematicCharacterVariableUpdateGroup` was removed, since there are cases where it is important for this group to be user-defined in order to have better control over when it updates. In order to replace it, add these rules to your systems (or create a new systems group that has these rules):\n    * `[UpdateInGroup(typeof(SimulationSystemGroup))]`\n    * `[UpdateAfter(typeof(FixedStepSimulationSystemGroup))]`\n    * `[UpdateBefore(typeof(TransformSystemGroup))]`\n\n### Security"
+    "changelog": "### Changed\n* Updated package dependencies\n\n### Added\n* Added new version of `KinematicCharacterUtilities.BakeCharacter` that takes an `IBaker` as parameter, as opposed to a `Baker<T>`\n\n### Removed\n* Removed the `RotateAroundPoint` method of `MathUtilities`, which was unused by the package."
   },
   "upmCi": {
-    "footprint": "bf291377a6222f7352a0187990658d1eaa4abfe3"
+    "footprint": "fe1e65bf10cfdc1597178d2fe4b68c7286871949"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.charactercontroller@1.1/manual/index.html",
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.charactercontroller@1.2/manual/index.html",
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/dots.git",
     "type": "git",
-    "revision": "d47ea1b1426f66fe2fe061307ecbeb444942e108"
+    "revision": "47612ad2d3aa046bd379f795d6b56953a5e07a2c"
   }
 }

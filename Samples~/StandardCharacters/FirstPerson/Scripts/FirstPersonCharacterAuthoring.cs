@@ -12,7 +12,7 @@ public class FirstPersonCharacterAuthoring : MonoBehaviour
 {
     public GameObject ViewEntity;
     public AuthoringKinematicCharacterProperties CharacterProperties = AuthoringKinematicCharacterProperties.GetDefault();
-   
+
     public float GroundMaxSpeed = 10f;
     public float GroundedMovementSharpness = 15f;
     public float AirAcceleration = 50f;
@@ -29,7 +29,7 @@ public class FirstPersonCharacterAuthoring : MonoBehaviour
     {
         public override void Bake(FirstPersonCharacterAuthoring authoring)
         {
-            KinematicCharacterUtilities.BakeCharacter(this, authoring, authoring.CharacterProperties);
+            KinematicCharacterUtilities.BakeCharacter(this, authoring.gameObject, authoring.CharacterProperties);
 
             Entity entity = GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
 
@@ -46,7 +46,7 @@ public class FirstPersonCharacterAuthoring : MonoBehaviour
                 StepAndSlopeHandling = authoring.StepAndSlopeHandling,
                 MinViewAngle = authoring.MinViewAngle,
                 MaxViewAngle = authoring.MaxViewAngle,
-                
+
                 ViewEntity = GetEntity(authoring.ViewEntity, TransformUsageFlags.Dynamic),
                 ViewPitchDegrees = 0f,
                 ViewLocalRotation = quaternion.identity,

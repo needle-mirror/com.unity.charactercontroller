@@ -157,7 +157,7 @@ namespace Unity.CharacterController
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<CharacterInterpolation>();
-            state.RequireForUpdate<CharacterInterpolationRememberTransformSystem.Singleton >();
+            state.RequireForUpdate<CharacterInterpolationRememberTransformSystem.Singleton>();
         }
 
         [BurstCompile]
@@ -223,7 +223,7 @@ namespace Unity.CharacterController
                     }
                 }
 
-                localToWorld.Value = new float4x4(interpolatedRot, interpolatedPos);
+                localToWorld.Value = float4x4.TRS(interpolatedPos, interpolatedRot, transform.Scale);
             }
         }
     }

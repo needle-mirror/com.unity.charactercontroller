@@ -225,7 +225,7 @@ namespace Unity.CharacterController
             right = math.normalizesafe(math.cross(initialVector, fwd));
             up = math.normalizesafe(math.cross(fwd, right));
         }
-        
+
         /// <summary>
         /// Calculates the displacement vector of a worldspace point from one transform pose to the next
         /// </summary>
@@ -273,21 +273,6 @@ namespace Unity.CharacterController
             float3 localPointToTranslation = math.mul(math.inverse(rotation), position - aroundPoint);
             position = aroundPoint + math.mul(targetRotation, localPointToTranslation);
             rotation = targetRotation;
-        }
-
-        /// <summary>
-        /// Applies a rotation delta to a transform's rotation, but also modifies its position so that the end result is as if the transform has rotated around a given point in order to reach the specified rotation
-        /// </summary>
-        /// <param name="rotation"> The modified rotation </param>
-        /// <param name="position"> The modified position </param>
-        /// <param name="aroundPoint"> The point to rotate around </param>
-        /// <param name="addedRotation"> The desired rotation delta </param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RotateAroundPoint(ref quaternion rotation, ref float3 position, float3 aroundPoint, quaternion addedRotation)
-        {
-            float3 localPointToTranslation = math.mul(math.inverse(rotation), position - aroundPoint);
-            rotation = math.mul(rotation, addedRotation);
-            position = aroundPoint + math.mul(rotation, localPointToTranslation);
         }
     }
 }

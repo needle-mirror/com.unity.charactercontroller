@@ -324,12 +324,27 @@ namespace Unity.CharacterController
             T authoring,
             AuthoringKinematicCharacterProperties authoringProperties) where T : MonoBehaviour
         {
-            if (authoring.transform.lossyScale != UnityEngine.Vector3.one)
+            BakeCharacter(baker, authoring.gameObject, authoringProperties);
+        }
+
+        /// <summary>
+        /// Handles the conversion from GameObject to Entity for a character
+        /// </summary>
+        /// <param name="baker"> The baker that want to bake a character </param>
+        /// <param name="authoringGameObject"> The GameObject used for authoring the character </param>
+        /// <param name="authoringProperties"> The properties of the character </param>
+        /// <typeparam name="T"> The type of the monobehaviour used for authoring the character </typeparam>
+        public static void BakeCharacter(
+            IBaker baker,
+            GameObject authoringGameObject,
+            AuthoringKinematicCharacterProperties authoringProperties)
+        {
+            if (authoringGameObject.transform.lossyScale != UnityEngine.Vector3.one)
             {
                 UnityEngine.Debug.LogError("ERROR: kinematic character objects do not support having a scale other than (1,1,1). Conversion will be aborted");
                 return;
             }
-            if (authoring.gameObject.GetComponent<Rigidbody>() != null)
+            if (authoringGameObject.gameObject.GetComponent<Rigidbody>() != null)
             {
                 UnityEngine.Debug.LogError("ERROR: kinematic character objects cannot have a Rigidbody component. The correct physics components will be setup automatically during conversion. Conversion will be aborted");
                 return;

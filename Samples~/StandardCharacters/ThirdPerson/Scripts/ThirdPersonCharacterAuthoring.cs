@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 public class ThirdPersonCharacterAuthoring : MonoBehaviour
 {
     public AuthoringKinematicCharacterProperties CharacterProperties = AuthoringKinematicCharacterProperties.GetDefault();
-    
+
     public float RotationSharpness = 25f;
     public float GroundMaxSpeed = 10f;
     public float GroundedMovementSharpness = 15f;
@@ -26,7 +26,7 @@ public class ThirdPersonCharacterAuthoring : MonoBehaviour
     {
         public override void Bake(ThirdPersonCharacterAuthoring authoring)
         {
-            KinematicCharacterUtilities.BakeCharacter(this, authoring, authoring.CharacterProperties);
+            KinematicCharacterUtilities.BakeCharacter(this, authoring.gameObject, authoring.CharacterProperties);
 
             Entity entity = GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
 
