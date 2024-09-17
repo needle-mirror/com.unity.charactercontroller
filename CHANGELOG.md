@@ -1,6 +1,14 @@
 # Changelog
 
 
+
+## [1.2.4] - 2024-09-17
+
+### Changed
+* Updated package dependencies
+
+
+
 ## [1.2.0-pre.2] - 2024-05-30
 
 ### Changed
