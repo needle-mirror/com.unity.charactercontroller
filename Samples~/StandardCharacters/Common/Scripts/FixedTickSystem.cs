@@ -17,7 +17,7 @@ public partial struct FixedTickSystem : ISystem
     public void OnCreate(ref SystemState state)
     {
         if (!SystemAPI.HasSingleton<Singleton>())
-        { 
+        {
             Entity singletonEntity = state.EntityManager.CreateEntity();
             state.EntityManager.AddComponentData(singletonEntity, new Singleton());
         }

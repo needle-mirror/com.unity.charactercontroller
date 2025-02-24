@@ -14,17 +14,17 @@ namespace Unity.CharacterController.RuntimeTests
         public World World => World.DefaultGameObjectInjectionWorld;
 
         private const float SimulationDeltaTime = 0.02f;
-        
+
         [SetUp]
         public void SetUp()
         {
             World.GetExistingSystemManaged<SimulationSystemGroup>().RateManager = new RateUtils.FixedRateSimpleManager(SimulationDeltaTime);
             World.GetExistingSystemManaged<FixedStepSimulationSystemGroup>().RateManager = null;
             World.Time = new TimeData(0f, SimulationDeltaTime);
-            
+
             CharacterTestUtils.BuildPhysicsWorld(World, out PhysicsWorldSingleton physWorldSingleton);
         }
-        
+
         [TearDown]
         public void TearDown()
         {

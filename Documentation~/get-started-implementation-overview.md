@@ -22,7 +22,7 @@ Here are the main steps of how input is converted into character movement by the
 The following steps describe how this happens in code, using the third-person character as an example:
 
 * `InitializationSystemGroup`
-    * `ThirdPersonPlayerInputsSystem` gathers input from Unity's input system every frame. It iterates on all entities with a `ThirdPersonPlayerInputs` component, and writes the raw input to that component. 
+    * `ThirdPersonPlayerInputsSystem` gathers input from Unity's input system every frame. It iterates on all entities with a `ThirdPersonPlayerInputs` component, and writes the raw input to that component.
 * `SimulationSystemGroup`
     * `FixedStepSimulationSystemGroup`
         * `ThirdPersonPlayerFixedStepControlSystem` handles taking the raw input from `ThirdPersonPlayerInputs`, and converting it to a format that the character can work with in the `ThirdPersonCharacterControl` component. It does this for inputs that are meant to be consumed during the fixed update.
@@ -66,11 +66,11 @@ Velocity and rotation are handled in different locations because they have a dif
 
 Velocity is best handled at a fixed timestep, because it directly participates in collisions and physics. The fixed timestep is ideal because of its consistency and predictability.
 
-Rotation is often best handled at a variable timestep (in sync with the rendering rate), because if it was handled at a fixed timestep with interpolation instead, there would be a noticeable mouse input unresponsiveness. 
+Rotation is often best handled at a variable timestep (in sync with the rendering rate), because if it was handled at a fixed timestep with interpolation instead, there would be a noticeable mouse input unresponsiveness.
 
-This is especially noticeable for first-person characters or third-person characters that can aim directly in the camera direction while it rotates. Rotation can also participate in collisions and physics in certain cases such as when a character capsule rotates on an axis other than Y, but this typically has less of an impact on physics solving than the velocity does. 
+This is especially noticeable for first-person characters or third-person characters that can aim directly in the camera direction while it rotates. Rotation can also participate in collisions and physics in certain cases such as when a character capsule rotates on an axis other than Y, but this typically has less of an impact on physics solving than the velocity does.
 
-In any case, you should know that the decision to handle rotation at a variable rate is not a hard requirement; but only a default suggestion. If you believe that rotation would be better handled at a fixed timestep for your game, then you can move the rotation-handling code to your character aspect's `PhysicsUpdate` instead, and enable rotation interpolation in your character authoring. 
+In any case, you should know that the decision to handle rotation at a variable rate is not a hard requirement; but only a default suggestion. If you believe that rotation would be better handled at a fixed timestep for your game, then you can move the rotation-handling code to your character aspect's `PhysicsUpdate` instead, and enable rotation interpolation in your character authoring.
 
 
 ## Separate player and character entities

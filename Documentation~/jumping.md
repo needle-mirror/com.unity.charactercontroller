@@ -6,7 +6,7 @@ Because of the way that [character grounding](movement-grounding.md) works, ther
 
 ## Implement jumping
 
-You can also use the pre-made [`CharacterControlUtilities.StandardJump`](xref:Unity.CharacterController.CharacterControlUtilities.StandardJump*) method for a quick complete jump implementation. Alternatively, if you want to write your own jump implementation, you must remember to not only set an upwards velocity for the character, but also to set the [`IsGrounded`](xref:Unity.CharacterController.KinematicCharacterBody.IsGrounded) field to `false` to manually unground the character. This makes sure that the ground snapping mechanism doesn't snap your character back to ground. 
+You can also use the pre-made [`CharacterControlUtilities.StandardJump`](xref:Unity.CharacterController.CharacterControlUtilities.StandardJump*) method for a quick complete jump implementation. Alternatively, if you want to write your own jump implementation, you must remember to not only set an upwards velocity for the character, but also to set the [`IsGrounded`](xref:Unity.CharacterController.KinematicCharacterBody.IsGrounded) field to `false` to manually unground the character. This makes sure that the ground snapping mechanism doesn't snap your character back to ground.
 
 
 ### Double jumping

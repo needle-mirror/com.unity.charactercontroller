@@ -1,3 +1,4 @@
+#pragma warning disable CS0618
 using System;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
@@ -46,7 +47,7 @@ namespace Unity.CharacterController
         /// <param name="baseContext"> The built-in context struct holding global data meant to be accessed during the character update </param>
         /// <param name="hit"> The evaluated hit </param>
         /// <param name="groundingEvaluationType"> An identifier meant to indicate what type of grounding evaluation is being done at the moment of calling this. </param>
-        /// <returns></returns>
+        /// <returns> Returns true if the character is grounded on the specified hit </returns>
         bool IsGroundedOnHit(
             ref C context,
             ref KinematicCharacterUpdateContext baseContext,
@@ -605,7 +606,7 @@ namespace Unity.CharacterController
             ref C context,
             ref KinematicCharacterUpdateContext baseContext,
             ref KinematicCharacterBody characterBody,
-            float deltaTime)  where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
+            float deltaTime) where T : unmanaged, IKinematicCharacterProcessor<C> where C : unmanaged
         {
             CharacterHitsBuffer.Clear();
             DeferredImpulsesBuffer.Clear();
@@ -1252,14 +1253,14 @@ namespace Unity.CharacterController
                         ColliderDistanceInput correctionInput = new ColliderDistanceInput(characterPhysicsCollider.Value, 1, characterRelativeToOther, characterScale);
                         if (otherBody.Collider.AsPtr()->CalculateDistance(correctionInput, out DistanceHit correctionHit))
                         {
-                            if(correctionHit.Distance > 0f)
+                            if (correctionHit.Distance > 0f)
                             {
                                 float3 reconstructedHitNormal = math.mul(otherBodyWorldTransform.rot, correctionHit.SurfaceNormal);
                                 if (math.dot(-reconstructedHitNormal, -characterBody.GroundingUp) > 0f)
                                 {
                                     float angleBetweenGroundingDownAndClosestPointOnOther = math.PI * 0.5f - MathUtilities.AngleRadians(-reconstructedHitNormal, -characterBody.GroundingUp);
                                     float sineAngle = math.sin(angleBetweenGroundingDownAndClosestPointOnOther);
-                                    if(sineAngle > 0f)
+                                    if (sineAngle > 0f)
                                     {
                                         float correctedDistance = correctionHit.Distance / math.sin(angleBetweenGroundingDownAndClosestPointOnOther);
                                         distanceToGround = math.clamp(correctedDistance, 0f, Constants.CollisionOffset);
@@ -1472,7 +1473,7 @@ namespace Unity.CharacterController
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
 
             // Project on ground hit
-            if(characterBody.IsGrounded)
+            if (characterBody.IsGrounded)
             {
                 ProjectVelocityOnGrounding(ref characterBody.RelativeVelocity, characterBody.GroundHit.Normal, characterBody.GroundingUp);
             }
@@ -1680,7 +1681,7 @@ namespace Unity.CharacterController
             baseContext.TmpRigidbodyIndexesProcessed.Clear();
 
             LocalTransform characterTransform = LocalTransform.ValueRO;
-            quaternion characterRotation =characterTransform.Rotation;
+            quaternion characterRotation = characterTransform.Rotation;
             float characterScale = characterTransform.Scale;
             KinematicCharacterProperties characterProperties = CharacterProperties.ValueRO;
             PhysicsCollider characterPhysicsCollider = PhysicsCollider.ValueRO;
@@ -1868,13 +1869,13 @@ namespace Unity.CharacterController
         /// <param name="characterBody"> The character body component </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="hit"> The hit to decollide from </param>
-        /// <param name="decollisionDistance"></param>
+        /// <param name="decollisionDistance"> The distance of the decollision check, from the character collider's surface </param>
         /// <param name="originalVelocityDirection"> Direction of the character velocity before any projection of velocity happened on this update </param>
-        /// <param name="characterSimulateDynamic"></param>
-        /// <param name="isGroundedOnHit"></param>
-        /// <param name="hitIsDynamic"></param>
-        /// <param name="addToCharacterHits"></param>
-        /// <param name="projectVelocityOnHit"></param>
+        /// <param name="characterSimulateDynamic"> If the character is "simulate dynamic"</param>
+        /// <param name="isGroundedOnHit"> If the character is grounded on hit </param>
+        /// <param name="hitIsDynamic"> If the hit is dynamic </param>
+        /// <param name="addToCharacterHits"> If the decollision hit should be added to character hits </param>
+        /// <param name="projectVelocityOnHit"> If the character velocity should be projected on the hit </param>
         /// <typeparam name="T"> The type of the struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </typeparam>
         /// <typeparam name="C"> The type of the user-created context struct </typeparam>
         public void DecollideFromHit<T, C>(
@@ -1901,7 +1902,7 @@ namespace Unity.CharacterController
             // Always decollide vertically from grounded hits
             if (isGroundedOnHit)
             {
-                if(math.dot(characterBody.GroundingUp, hit.Normal) > Constants.MinDotRatioForVerticalDecollision)
+                if (math.dot(characterBody.GroundingUp, hit.Normal) > Constants.MinDotRatioForVerticalDecollision)
                 {
                     decollisionDirection = characterBody.GroundingUp;
                     RecalculateDecollisionVector(ref decollisionVector, hit.Normal, decollisionDirection, decollisionDistance);
@@ -2192,13 +2193,13 @@ namespace Unity.CharacterController
         /// <param name="characterBody"> The character body component </param>
         /// <param name="characterPosition"> The position of the character </param>
         /// <param name="hit"> The hit to decollide from </param>
-        /// <param name="remainingMovementDirection"></param>
-        /// <param name="remainingMovementLength"></param>
-        /// <param name="hitDistance"></param>
-        /// <param name="stepHandling"></param>
-        /// <param name="maxStepHeight"></param>
+        /// <param name="remainingMovementDirection"> The remaining movement direction </param>
+        /// <param name="remainingMovementLength"> The remaining movement length </param>
+        /// <param name="hitDistance"> The hit distance </param>
+        /// <param name="stepHandling"> If step handling is enabled </param>
+        /// <param name="maxStepHeight"> The character's max step height </param>
         /// <param name="characterWidthForStepGroundingCheck"> Character width used to determine grounding for steps. This is for cases where character with a spherical base tries to step onto an angled surface that is near the character's max step height. In thoses cases, the character might be grounded on steps on one frame, but wouldn't be grounded on the next frame as the spherical nature of its shape would push it a bit further up beyond its max step height. </param>
-        /// <param name="hasSteppedUp"></param>
+        /// <param name="hasSteppedUp"> If the character has stepped up something </param>
         /// <typeparam name="T"> The type of the struct implementing <see cref="IKinematicCharacterProcessor{C}"/> </typeparam>
         /// <typeparam name="C"> The type of the user-created context struct </typeparam>
         public void CheckForSteppingUpHit<T, C>(
@@ -2336,10 +2337,10 @@ namespace Unity.CharacterController
                                 steppedHeight = math.max(0f, steppedHeight + Constants.CollisionOffset);
 
                                 // Add slope & character width consideration to stepped height
-                                if(characterWidthForStepGroundingCheck > 0f)
+                                if (characterWidthForStepGroundingCheck > 0f)
                                 {
                                     // Find the effective slope normal
-                                    float3 forwardSlopeCheckDirection =  -math.normalizesafe(math.cross(math.cross(characterBody.GroundingUp, stepHit.Normal), stepHit.Normal));
+                                    float3 forwardSlopeCheckDirection = -math.normalizesafe(math.cross(math.cross(characterBody.GroundingUp, stepHit.Normal), stepHit.Normal));
 
                                     if (RaycastClosestCollisions(
                                             in processor,
@@ -2430,7 +2431,7 @@ namespace Unity.CharacterController
 
             if (IsGroundedOnSlopeNormal(characterProperties.MaxGroundedSlopeDotProduct, characterBody.GroundHit.Normal, characterBody.GroundingUp))
             {
-                if(stepHandling)
+                if (stepHandling)
                 {
                     downDetectionDepth = math.max(maxStepHeight, downDetectionDepth) + verticalOffset;
                 }
@@ -2498,7 +2499,7 @@ namespace Unity.CharacterController
                             isMovingTowardsNoGrounding = true;
                         }
 
-                        if(isMovingTowardsNoGrounding)
+                        if (isMovingTowardsNoGrounding)
                         {
                             rayStartPoint += velocityDirection * secondaryNoGroundingCheckDistance;
 
@@ -2677,7 +2678,7 @@ namespace Unity.CharacterController
             float slopeChangeAnglesRadians = MathUtilities.AngleRadians(currentGroundNormalOnPlane, downHitNormalOnPlane);
 
             // invert angle sign if it's a downward slope change
-            if(math.dot(currentGroundNormalOnPlane, velocityDirection) < math.dot(downHitNormalOnPlane, velocityDirection))
+            if (math.dot(currentGroundNormalOnPlane, velocityDirection) < math.dot(downHitNormalOnPlane, velocityDirection))
             {
                 slopeChangeAnglesRadians *= -1;
             }

@@ -232,7 +232,7 @@ namespace Unity.CharacterController
         /// <param name="pointWorldSpace"> The worldspace point that gets moved (before movement) </param>
         /// <param name="fromTransform"> The original transform pose </param>
         /// <param name="toTransform"> The destination transform pose </param>
-        /// <returns></returns>
+        /// <returns> The resulting point displacement  </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float3 CalculatePointDisplacement(float3 pointWorldSpace, RigidTransform fromTransform, RigidTransform toTransform)
         {
@@ -249,7 +249,7 @@ namespace Unity.CharacterController
         /// <param name="linearVelocity"> The linear velocity of the moving body </param>
         /// <param name="angularVelocity"> The angular velocity of the moving body </param>
         /// <param name="pointWorldSpace"> The worldspace point to move </param>
-        /// <returns></returns>
+        /// <returns> The resulting point displacement </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float3 CalculatePointDisplacementFromVelocity(float deltaTime, RigidTransform bodyRigidTransform, float3 linearVelocity, float3 angularVelocity, float3 pointWorldSpace)
         {

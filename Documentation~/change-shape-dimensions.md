@@ -5,7 +5,7 @@ You can change the shape and dimensions of the character physics shape at author
 
 ## Change shape type at authoring time
 
-To changing the character physics shape at authoring time, change the "Shape Type" in the `PhysicsShape` component of the character GameObject. The only limitation is that it must be a convex shape (all primitives are convex). 
+To changing the character physics shape at authoring time, change the "Shape Type" in the `PhysicsShape` component of the character GameObject. The only limitation is that it must be a convex shape (all primitives are convex).
 
 ## Changing the shape dimensions at runtime
 

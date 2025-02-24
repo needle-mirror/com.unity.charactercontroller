@@ -17,10 +17,10 @@ public void ProjectVelocityOnHits(
 {
     ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
     KinematicCharacterBody characterBody = CharacterAspect.CharacterBody.ValueRO;
-    
+
     // Remember velocity before it was projected
     float3 velocityBeforeProjection = velocity;
-    
+
     CharacterAspect.Default_ProjectVelocityOnHits(
         ref velocity,
         ref characterIsGrounded,
@@ -49,7 +49,7 @@ With this change:
 
 ![](images/preventwallslide-after.gif)
 
-If you don't want to completely stop the velocity horizontally, but instead simulate a certain friction or slowdown when the character moves against a wall, you could do something like this instead, which reduces velocity: 
+If you don't want to completely stop the velocity horizontally, but instead simulate a certain friction or slowdown when the character moves against a wall, you could do something like this instead, which reduces velocity:
 
 ```cs
 public void ProjectVelocityOnHits(
@@ -62,7 +62,7 @@ public void ProjectVelocityOnHits(
     float3 originalVelocityDirection)
 {
     ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
-    
+
     CharacterAspect.Default_ProjectVelocityOnHits(
         ref velocity,
         ref characterIsGrounded,

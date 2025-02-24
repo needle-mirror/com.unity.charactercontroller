@@ -1,16 +1,16 @@
 
 # Input handling
 
-There are challenges to be aware of when it comes to processing player input that is meant to be used during a fixed timestep update (as is the case with the character physics update). 
+There are challenges to be aware of when it comes to processing player input that is meant to be used during a fixed timestep update (as is the case with the character physics update).
 
 
 ## Understanding fixed timestep updates
 
-ECS has a `FixedStepSimulationSystemGroup` that acts as the default group where systems update at a fixed rate. On every regular update, Unity keeps track of how long it's been since the last time it ran a fixed update. Then, it runs the amount of fixed updates that corresponds to how many should've happened in that time. In practice this is capped to a maximum amount of fixed updates per frame. 
+ECS has a `FixedStepSimulationSystemGroup` that acts as the default group where systems update at a fixed rate. On every regular update, Unity keeps track of how long it's been since the last time it ran a fixed update. Then, it runs the amount of fixed updates that corresponds to how many should've happened in that time. In practice this is capped to a maximum amount of fixed updates per frame.
 
 Fixed updates happen at a fixed timestep instead of a variable one, and this makes them ideal for logic that needs consistency and predictability, like physics or server game simulation.
 
-For example, if your application has a fixed timestep of `0.02` seconds (or, 50 fps), it needs 50 fixed updates to happen every second no matter what the frame rate is. If your application has a high framerate and most frames take less than `0.02` seconds, then there will be a lot of frames where no fixed updates happen, because the amount of time since the last fixed update is less than `0.02` seconds. 
+For example, if your application has a fixed timestep of `0.02` seconds (or, 50 fps), it needs 50 fixed updates to happen every second no matter what the frame rate is. If your application has a high framerate and most frames take less than `0.02` seconds, then there will be a lot of frames where no fixed updates happen, because the amount of time since the last fixed update is less than `0.02` seconds.
 
 However, if your application has a low framerate where some frames take `0.05` seconds, then multiple fixed updates will be triggered during these frames to catch up with the amount of fixed updates that should've happened in that `0.05` seconds time and the leftover time since the last fixed update on the previous frame.
 
@@ -23,7 +23,7 @@ When you have systems that update at a fixed timestep that can consume punctual 
 * If the frame rate is higher than the fixed rate, you might get multiple regular updates between two fixed updates. If your button press happened during any of these regular frames in-between fixed updates, that input event will never be detected by the next fixed update because it was only detected as "pressed" for one regular frame where no fixed update was triggered.
 * If the frame rate is lower than the fixed rate, you might get multiple fixed updates between two regular updates. Since the state of your button press is only updated during regular updates, having the button press detected on one frame might lead to multiple fixed updates in a row detecting the button as "pressed".
 
-Using a "Jump" button press as an example, 
+Using a "Jump" button press as an example,
 * A frame rate that is higher than the fixed update rate could lead to jump events not being detected by the character physics update.
 * A frame rate that is lower than the fixed update rate could lead to jump events being detected twice in a row by the character physics update.
 

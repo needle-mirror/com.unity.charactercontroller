@@ -9,7 +9,7 @@ You can use the `IsGroundedOnHit` callback of your character aspect to prevent g
 
 ## Constrain ground movement to the ground plane
 
-You can set the [`ConstrainVelocityToGroundPlane`](xref:Unity.CharacterController.BasicStepAndSlopeHandlingParameters.ConstrainVelocityToGroundPlane) to true to make your character unable to "bump up into the air" when moving fast into slopes that are too steep to be grounded on: 
+You can set the [`ConstrainVelocityToGroundPlane`](xref:Unity.CharacterController.BasicStepAndSlopeHandlingParameters.ConstrainVelocityToGroundPlane) to true to make your character unable to "bump up into the air" when moving fast into slopes that are too steep to be grounded on:
 
 ![](images/howto_constrainvel_true.gif)
 

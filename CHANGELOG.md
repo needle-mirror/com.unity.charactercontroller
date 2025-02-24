@@ -1,6 +1,12 @@
 # Changelog
 
 
+## [1.3.10] - 2025-02-24
+
+### Changed
+* Updated package dependencies
+* Updated Standard Characters (samples) to use com.unity.inputsystem package by default.
+
 
 ## [1.2.4] - 2024-09-17
 
@@ -51,7 +57,7 @@
 
 ### Fixed
 
-* Characters can now raise trigger events with trigger shapes that are on dynamic rigidbodies 
+* Characters can now raise trigger events with trigger shapes that are on dynamic rigidbodies
 
 
 ## [1.0.0-exp.5] - 2023-03-30

@@ -54,7 +54,7 @@ public partial struct OrbitCameraSimulationSystem : ISystem
                     ref LocalTransformLookup,
                     ref ParentLookup,
                     ref PostTransformMatrixLookup,
-                    ref CameraTargetLookup, 
+                    ref CameraTargetLookup,
                     out float4x4 targetWorldTransform))
             {
                 float3 targetUp = targetWorldTransform.Up();
@@ -63,8 +63,8 @@ public partial struct OrbitCameraSimulationSystem : ISystem
                 // Update planar forward based on target up direction and rotation from parent
                 {
                     quaternion tmpPlanarRotation = MathUtilities.CreateRotationWithUpPriority(targetUp, orbitCamera.PlanarForward);
-                    
-                    // Rotation from character parent 
+
+                    // Rotation from character parent
                     if (orbitCamera.RotateWithCharacterParent &&
                         KinematicCharacterBodyLookup.TryGetComponent(cameraControl.FollowedCharacterEntity, out KinematicCharacterBody characterBody))
                     {
@@ -72,7 +72,7 @@ public partial struct OrbitCameraSimulationSystem : ISystem
                         quaternion planarRotationFromParent = characterBody.RotationFromParent;
                         KinematicCharacterUtilities.AddVariableRateRotationFromFixedRateRotation(ref tmpPlanarRotation, planarRotationFromParent, DeltaTime, characterBody.LastPhysicsUpdateDeltaTime);
                     }
-                    
+
                     orbitCamera.PlanarForward = MathUtilities.GetForwardFromRotation(tmpPlanarRotation);
                 }
 
@@ -80,7 +80,7 @@ public partial struct OrbitCameraSimulationSystem : ISystem
                 float yawAngleChange = cameraControl.LookDegreesDelta.x * orbitCamera.RotationSpeed;
                 quaternion yawRotation = quaternion.Euler(targetUp * math.radians(yawAngleChange));
                 orbitCamera.PlanarForward = math.rotate(yawRotation, orbitCamera.PlanarForward);
-                
+
                 // Pitch
                 orbitCamera.PitchAngle += -cameraControl.LookDegreesDelta.y * orbitCamera.RotationSpeed;
                 orbitCamera.PitchAngle = math.clamp(orbitCamera.PitchAngle, orbitCamera.MinVAngle, orbitCamera.MaxVAngle);
@@ -135,11 +135,11 @@ public partial struct OrbitCameraLateUpdateSystem : ISystem
         public float DeltaTime;
         [ReadOnly]
         public PhysicsWorld PhysicsWorld;
-        
+
         public ComponentLookup<LocalToWorld> LocalToWorldLookup;
-        [ReadOnly] 
+        [ReadOnly]
         public ComponentLookup<CameraTarget> CameraTargetLookup;
-        [ReadOnly] 
+        [ReadOnly]
         public ComponentLookup<KinematicCharacterBody> KinematicCharacterBodyLookup;
 
         void Execute(
@@ -155,17 +155,17 @@ public partial struct OrbitCameraLateUpdateSystem : ISystem
                     out LocalToWorld targetWorldTransform))
             {
                 quaternion cameraRotation = OrbitCameraUtilities.CalculateCameraRotation(targetWorldTransform.Up, orbitCamera.PlanarForward, orbitCamera.PitchAngle);
-                
+
                 float3 cameraForward = math.mul(cameraRotation, math.forward());
                 float3 targetPosition = targetWorldTransform.Position;
-                
+
                 // Distance smoothing
                 orbitCamera.SmoothedTargetDistance = math.lerp(orbitCamera.SmoothedTargetDistance, orbitCamera.TargetDistance, MathUtilities.GetSharpnessInterpolant(orbitCamera.DistanceMovementSharpness, DeltaTime));
-                
+
                 // Obstruction handling
                 // Obstruction detection is handled here, because we have to adjust the obstruction distance
                 // to match the interpolated physics body transform (as opposed to the "simulation" transform). Otherwise, a
-                // camera getting obstructed by a moving physics body would have visible jitter. 
+                // camera getting obstructed by a moving physics body would have visible jitter.
                 if (orbitCamera.ObstructionRadius > 0f)
                 {
                     float obstructionCheckDistance = orbitCamera.SmoothedTargetDistance;
@@ -228,10 +228,10 @@ public partial struct OrbitCameraLateUpdateSystem : ISystem
                 {
                     orbitCamera.ObstructedDistance = orbitCamera.SmoothedTargetDistance;
                 }
-                
+
                 // Place camera at the final distance (includes smoothing and obstructions)
                 float3 cameraPosition = OrbitCameraUtilities.CalculateCameraPosition(targetPosition, cameraRotation, orbitCamera.ObstructedDistance);
-                
+
                 // Write to LtW
                 LocalToWorldLookup[entity] = new LocalToWorld { Value = new float4x4(cameraRotation, cameraPosition) };
             }
@@ -242,7 +242,7 @@ public partial struct OrbitCameraLateUpdateSystem : ISystem
 public static class OrbitCameraUtilities
 {
     public static bool TryGetCameraTargetSimulationWorldTransform(
-        Entity targetCharacterEntity, 
+        Entity targetCharacterEntity,
         ref ComponentLookup<LocalTransform> localTransformLookup,
         ref ComponentLookup<Parent> parentLookup,
         ref ComponentLookup<PostTransformMatrix> postTransformMatrixLookup,
@@ -272,9 +272,9 @@ public static class OrbitCameraUtilities
 
         return foundValidCameraTarget;
     }
-    
+
     public static bool TryGetCameraTargetInterpolatedWorldTransform(
-        Entity targetCharacterEntity, 
+        Entity targetCharacterEntity,
         ref ComponentLookup<LocalToWorld> localToWorldLookup,
         ref ComponentLookup<CameraTarget> cameraTargetLookup,
         out LocalToWorld worldTransform)
@@ -295,7 +295,7 @@ public static class OrbitCameraUtilities
 
         return foundValidCameraTarget;
     }
-    
+
     public static quaternion CalculateCameraRotation(float3 targetUp, float3 planarForward, float pitchAngle)
     {
         quaternion pitchRotation = quaternion.Euler(math.right() * math.radians(pitchAngle));
@@ -303,7 +303,7 @@ public static class OrbitCameraUtilities
         cameraRotation = math.mul(cameraRotation, pitchRotation);
         return cameraRotation;
     }
-    
+
     public static float3 CalculateCameraPosition(float3 targetPosition, quaternion cameraRotation, float distance)
     {
         return targetPosition + (-MathUtilities.GetForwardFromRotation(cameraRotation) * distance);
@@ -340,7 +340,7 @@ public struct CameraObstructionHitsCollector : ICollector<ColliderCastHit>
         {
             return false;
         }
-        
+
         if (math.dot(hit.SurfaceNormal, _cameraDirection) < 0f || !PhysicsUtilities.IsCollidable(hit.Material))
         {
             return false;

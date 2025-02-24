@@ -205,7 +205,7 @@ namespace Unity.CharacterController
         /// <summary>
         /// Returns an entity query builder that includes all basic components of a character
         /// </summary>
-        /// <returns></returns>
+        /// <returns> The EntityQueryBuilder for basic character component s </returns>
         public static EntityQueryBuilder GetBaseCharacterQueryBuilder()
         {
             return new EntityQueryBuilder(Allocator.Temp)
@@ -229,7 +229,7 @@ namespace Unity.CharacterController
         /// <summary>
         /// Returns an entity query builder that includes all basic components of a character as well as the interpolation component
         /// </summary>
-        /// <returns></returns>
+        /// <returns> The EntityQueryBuilder for interpolated characters </returns>
         public static EntityQueryBuilder GetInterpolatedCharacterQueryBuilder()
         {
             return GetBaseCharacterQueryBuilder()
@@ -333,7 +333,6 @@ namespace Unity.CharacterController
         /// <param name="baker"> The baker that want to bake a character </param>
         /// <param name="authoringGameObject"> The GameObject used for authoring the character </param>
         /// <param name="authoringProperties"> The properties of the character </param>
-        /// <typeparam name="T"> The type of the monobehaviour used for authoring the character </typeparam>
         public static void BakeCharacter(
             IBaker baker,
             GameObject authoringGameObject,

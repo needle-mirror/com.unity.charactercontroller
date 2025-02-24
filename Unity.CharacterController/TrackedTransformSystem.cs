@@ -19,13 +19,13 @@ namespace Unity.CharacterController
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<TrackedTransform>(); 
+            state.RequireForUpdate<TrackedTransform>();
         }
 
         [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
-        
+
         }
 
         [BurstCompile]

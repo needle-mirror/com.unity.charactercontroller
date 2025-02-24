@@ -1,6 +1,6 @@
 # Dynamic rigidbody interactions
 
-To let your character push and be pushed by dynamic rigidbodies, enable the [`SimulateDynamicBody`](xref:Unity.CharacterController.KinematicCharacterProperties.SimulateDynamicBody) option in your character's authoring component. 
+To let your character push and be pushed by dynamic rigidbodies, enable the [`SimulateDynamicBody`](xref:Unity.CharacterController.KinematicCharacterProperties.SimulateDynamicBody) option in your character's authoring component.
 
 When `SimulateDynamicBody` is enabled, the character applies force on itself and other rigidbodies to imitate the behavior of a true dynamic rigidbody. This uses the [`Mass`](xref:Unity.CharacterController.KinematicCharacterProperties.Mass) property of the character's authoring component to simulate collision mass ratios.
 

@@ -18,7 +18,7 @@ namespace Unity.CharacterController
     public struct AuthoringKinematicCharacterProperties
     {
         /// <summary>
-        /// Physics tags to be added to the character's physics body 
+        /// Physics tags to be added to the character's physics body
         /// </summary>
         [Header("General Properties")]
         [Tooltip("Physics tags to be added to the character's physics body")]
@@ -118,7 +118,7 @@ namespace Unity.CharacterController
         /// <summary>
         /// Gets a sensible default set of parameters for this struct
         /// </summary>
-        /// <returns></returns>
+        /// <returns> The default authoring character properties </returns>
         public static AuthoringKinematicCharacterProperties GetDefault()
         {
             AuthoringKinematicCharacterProperties c = new AuthoringKinematicCharacterProperties
@@ -154,7 +154,7 @@ namespace Unity.CharacterController
     }
 
     /// <summary>
-    /// Component holding general properties for a kinematic character 
+    /// Component holding general properties for a kinematic character
     /// </summary>
     [System.Serializable]
     public struct KinematicCharacterProperties : IComponentData
@@ -225,7 +225,7 @@ namespace Unity.CharacterController
         /// <summary>
         /// Constructs the runtime properties component based on authoring data
         /// </summary>
-        /// <param name="forAuthoring"></param>
+        /// <param name="forAuthoring"> The authoring character properties to build these properties from </param>
         public KinematicCharacterProperties(AuthoringKinematicCharacterProperties forAuthoring)
         {
             EvaluateGrounding = forAuthoring.EvaluateGrounding;
@@ -250,14 +250,14 @@ namespace Unity.CharacterController
         /// <summary>
         /// Whether or not dynamic rigidbody collisions should be enabled, with the current character properties
         /// </summary>
-        /// <returns></returns>
+        /// <returns> If the character should ignore dynamic bodies based on these properties </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ShouldIgnoreDynamicBodies()
         {
             return !SimulateDynamicBody;
         }
     }
-    
+
     /// <summary>
     /// A component holding the transient data (data that gets modified during the character update) of the character
     /// </summary>
@@ -280,10 +280,10 @@ namespace Unity.CharacterController
         /// The character's anchor point to its parent, expressed in the parent's local space
         /// </summary>
         public float3 ParentLocalAnchorPoint;
-        
+
         // The following data is fully reset at the beginning of the character update, or recalculated during the update.
         // This means it typically doesn't need any network sync unless you access that data before the character update.
-        
+
         /// <summary>
         /// The character's grounding up direction
         /// </summary>
@@ -316,7 +316,7 @@ namespace Unity.CharacterController
         /// <summary>
         /// Returns a sensible default for this component
         /// </summary>
-        /// <returns></returns>
+        /// <returns> The default KinematicCharacterBody </returns>
         public static KinematicCharacterBody GetDefault()
         {
             return new KinematicCharacterBody
@@ -325,7 +325,7 @@ namespace Unity.CharacterController
                 RelativeVelocity = default,
                 ParentEntity = default,
                 ParentLocalAnchorPoint = default,
-                
+
                 GroundingUp = math.up(),
                 GroundHit = default,
                 ParentVelocity = default,
@@ -339,7 +339,7 @@ namespace Unity.CharacterController
         /// <summary>
         /// Whether or not the character has become grounded on this frame
         /// </summary>
-        /// <returns></returns>
+        /// <returns> If the character has become grounded </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasBecomeGrounded()
         {
@@ -349,7 +349,7 @@ namespace Unity.CharacterController
         /// <summary>
         /// Whether or not the character has become ungrounded on this frame
         /// </summary>
-        /// <returns></returns>
+        /// <returns> If the character has become ungrounded </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasBecomeUngrounded()
         {

@@ -22,8 +22,8 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="hitBody"> The hit body </param>
         /// <param name="colliderKey"> The hit collider key</param>
-        /// <param name="faceNormal"></param>
-        /// <returns></returns>
+        /// <param name="faceNormal"> The face normal </param>
+        /// <returns> True if a face normal was successfully computed </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool GetHitFaceNormal(RigidBody hitBody, ColliderKey colliderKey, out float3 faceNormal)
         {
@@ -51,7 +51,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="physicsWorld"> The Physics World of the body </param>
         /// <param name="rigidbodyIndex"> The body index </param>
-        /// <returns></returns>
+        /// <returns> True if the body has velocity and mass or not </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool DoesBodyHavePhysicsVelocityAndMass(in PhysicsWorld physicsWorld, int rigidbodyIndex)
         {
@@ -68,7 +68,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="physicsWorld"> The Physics World of the body </param>
         /// <param name="rigidbodyIndex"> The body index </param>
-        /// <returns></returns>
+        /// <returns> True if the body is dynamic </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBodyDynamic(in PhysicsWorld physicsWorld, int rigidbodyIndex)
         {
@@ -89,7 +89,7 @@ namespace Unity.CharacterController
         /// <param name="physicsWorld"> The Physics World of the body </param>
         /// <param name="bodyIndex"> The body index </param>
         /// <param name="tag"> The physics body tag to check for </param>
-        /// <returns></returns>
+        /// <returns> True if the body has the physics tag </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool HasPhysicsTag(in PhysicsWorld physicsWorld, int bodyIndex, CustomPhysicsBodyTags tag)
         {
@@ -108,7 +108,7 @@ namespace Unity.CharacterController
         /// </summary>
         /// <param name="hitMaterial"> The hit physics body material </param>
         /// <param name="tag"> The physics material tag to check for </param>
-        /// <returns></returns>
+        /// <returns> True if the body has the physics tag </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool HasPhysicsTag(Material hitMaterial, PhysicsCustomTags tag)
         {
@@ -170,7 +170,7 @@ namespace Unity.CharacterController
         /// Determines if the physics material has a collideable collision response
         /// </summary>
         /// <param name="material"> The physics material </param>
-        /// <returns></returns>
+        /// <returns> True if the material is collideable </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsCollidable(in Material material)
         {
@@ -189,7 +189,7 @@ namespace Unity.CharacterController
         /// <param name="rigidBody"> The rigidbody to change </param>
         /// <param name="colliderKey"> The collider key representing the collider to change </param>
         /// <param name="collisionResponse"> The desired collision response </param>
-        /// <returns></returns>
+        /// <returns> True if the target collider was found </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool SetCollisionResponse(RigidBody rigidBody, ColliderKey colliderKey, CollisionResponsePolicy collisionResponse)
         {

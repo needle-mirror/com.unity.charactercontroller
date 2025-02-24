@@ -21,7 +21,7 @@ public struct OrbitCamera : IComponentData
     public float ObstructionInnerSmoothingSharpness;
     public float ObstructionOuterSmoothingSharpness;
     public bool PreventFixedUpdateJitter;
-    
+
     public float TargetDistance;
     public float SmoothedTargetDistance;
     public float ObstructedDistance;

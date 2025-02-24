@@ -1,10 +1,12 @@
 using UnityEngine;
 using Unity.Entities;
+using UnityEngine.Serialization;
 
 [DisallowMultipleComponent]
 public class FirstPersonPlayerAuthoring : MonoBehaviour
 {
     public GameObject ControlledCharacter;
+    public float LookInputSensitivity = 0.2f;
 
     public class Baker : Baker<FirstPersonPlayerAuthoring>
     {
@@ -14,6 +16,7 @@ public class FirstPersonPlayerAuthoring : MonoBehaviour
             AddComponent(entity, new FirstPersonPlayer
             {
                 ControlledCharacter = GetEntity(authoring.ControlledCharacter, TransformUsageFlags.Dynamic),
+                LookInputSensitivity = authoring.LookInputSensitivity,
             });
             AddComponent<FirstPersonPlayerInputs>(entity);
         }

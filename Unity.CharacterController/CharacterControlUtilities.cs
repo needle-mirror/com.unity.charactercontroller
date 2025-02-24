@@ -203,9 +203,9 @@ namespace Unity.CharacterController
         /// <summary>
         /// Applies drag to a velocity
         /// </summary>
-        /// <param name="velocity">  </param>
-        /// <param name="deltaTime"></param>
-        /// <param name="drag"></param>
+        /// <param name="velocity"> The velocity to apply drag to </param>
+        /// <param name="deltaTime"> The current delta time </param>
+        /// <param name="drag"> The drag force </param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ApplyDragToVelocity(ref float3 velocity, float deltaTime, float drag)
         {

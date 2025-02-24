@@ -25,7 +25,7 @@ public class OrbitCameraAuthoring : MonoBehaviour
     public float ObstructionInnerSmoothingSharpness = float.MaxValue;
     public float ObstructionOuterSmoothingSharpness = 5f;
     public bool PreventFixedUpdateJitter = true;
-    
+
     [Header("Misc")]
     public List<GameObject> IgnoredEntities = new List<GameObject>();
 
@@ -34,34 +34,34 @@ public class OrbitCameraAuthoring : MonoBehaviour
         public override void Bake(OrbitCameraAuthoring authoring)
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic | TransformUsageFlags.WorldSpace);
-            
+
             AddComponent(entity, new OrbitCamera
             {
                 RotationSpeed = authoring.RotationSpeed,
                 MaxVAngle = authoring.MaxVAngle,
                 MinVAngle = authoring.MinVAngle,
                 RotateWithCharacterParent = authoring.RotateWithCharacterParent,
-                
+
                 MinDistance = authoring.MinDistance,
                 MaxDistance = authoring.MaxDistance,
                 DistanceMovementSpeed = authoring.DistanceMovementSpeed,
                 DistanceMovementSharpness = authoring.DistanceMovementSharpness,
-                
+
                 ObstructionRadius = authoring.ObstructionRadius,
                 ObstructionInnerSmoothingSharpness = authoring.ObstructionInnerSmoothingSharpness,
                 ObstructionOuterSmoothingSharpness = authoring.ObstructionOuterSmoothingSharpness,
                 PreventFixedUpdateJitter = authoring.PreventFixedUpdateJitter,
-                
+
                 TargetDistance = authoring.StartDistance,
                 SmoothedTargetDistance = authoring.StartDistance,
                 ObstructedDistance = authoring.StartDistance,
-                
+
                 PitchAngle = 0f,
                 PlanarForward = -math.forward(),
             });
-            
+
             AddComponent(entity, new OrbitCameraControl());
-            
+
             DynamicBuffer<OrbitCameraIgnoredEntityBufferElement> ignoredEntitiesBuffer = AddBuffer<OrbitCameraIgnoredEntityBufferElement>(entity);
             for (int i = 0; i < authoring.IgnoredEntities.Count; i++)
             {

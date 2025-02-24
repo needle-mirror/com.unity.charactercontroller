@@ -15,15 +15,15 @@ namespace Unity.CharacterController
     public partial struct StoreKinematicCharacterBodyPropertiesSystem : ISystem
     {
         private EntityQuery _storedCharacterQuery;
-        
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             _storedCharacterQuery = new EntityQueryBuilder(Allocator.Temp)
                 .WithAll<StoredKinematicCharacterData, KinematicCharacterProperties>()
                 .Build(ref state);
-        
-            state.RequireForUpdate(_storedCharacterQuery);   
+
+            state.RequireForUpdate(_storedCharacterQuery);
         }
 
         [BurstCompile]

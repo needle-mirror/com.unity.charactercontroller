@@ -1,3 +1,4 @@
+#pragma warning disable CS0618
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -46,7 +47,7 @@ public readonly partial struct ThirdPersonCharacterAspect : IAspect, IKinematicC
         CharacterAspect.Update_Initialize(in this, ref context, ref baseContext, ref characterBody, baseContext.Time.DeltaTime);
         CharacterAspect.Update_ParentMovement(in this, ref context, ref baseContext, ref characterBody, ref characterPosition, characterBody.WasGroundedBeforeCharacterUpdate);
         CharacterAspect.Update_Grounding(in this, ref context, ref baseContext, ref characterBody, ref characterPosition);
-        
+
         // Update desired character velocity after grounding was detected, but before doing additional processing that depends on velocity
         HandleVelocityControl(ref context, ref baseContext);
 
@@ -54,7 +55,7 @@ public readonly partial struct ThirdPersonCharacterAspect : IAspect, IKinematicC
         CharacterAspect.Update_PreventGroundingFromFutureSlopeChange(in this, ref context, ref baseContext, ref characterBody, in characterComponent.StepAndSlopeHandling);
         CharacterAspect.Update_GroundPushing(in this, ref context, ref baseContext, characterComponent.Gravity);
         CharacterAspect.Update_MovementAndDecollisions(in this, ref context, ref baseContext, ref characterBody, ref characterPosition);
-        CharacterAspect.Update_MovingPlatformDetection(ref baseContext, ref characterBody); 
+        CharacterAspect.Update_MovingPlatformDetection(ref baseContext, ref characterBody);
         CharacterAspect.Update_ParentMomentum(ref baseContext, ref characterBody);
         CharacterAspect.Update_ProcessStatefulCharacterHits();
     }
@@ -67,12 +68,12 @@ public readonly partial struct ThirdPersonCharacterAspect : IAspect, IKinematicC
         ref ThirdPersonCharacterControl characterControl = ref CharacterControl.ValueRW;
 
         // Rotate move input and velocity to take into account parent rotation
-        if(characterBody.ParentEntity != Entity.Null)
+        if (characterBody.ParentEntity != Entity.Null)
         {
             characterControl.MoveVector = math.rotate(characterBody.RotationFromParent, characterControl.MoveVector);
             characterBody.RelativeVelocity = math.rotate(characterBody.RotationFromParent, characterBody.RelativeVelocity);
         }
-        
+
         if (characterBody.IsGrounded)
         {
             // Move on ground
@@ -100,7 +101,7 @@ public readonly partial struct ThirdPersonCharacterAspect : IAspect, IKinematicC
                     characterBody.RelativeVelocity = tmpVelocity;
                 }
             }
-            
+
             // Gravity
             CharacterControlUtilities.AccelerateVelocity(ref characterBody.RelativeVelocity, characterComponent.Gravity, deltaTime);
 
@@ -119,26 +120,26 @@ public readonly partial struct ThirdPersonCharacterAspect : IAspect, IKinematicC
         // Add rotation from parent body to the character rotation
         // (this is for allowing a rotating moving platform to rotate your character as well, and handle interpolation properly)
         KinematicCharacterUtilities.AddVariableRateRotationFromFixedRateRotation(ref characterRotation, characterBody.RotationFromParent, baseContext.Time.DeltaTime, characterBody.LastPhysicsUpdateDeltaTime);
-        
+
         // Rotate towards move direction
         if (math.lengthsq(characterControl.MoveVector) > 0f)
         {
             CharacterControlUtilities.SlerpRotationTowardsDirectionAroundUp(ref characterRotation, baseContext.Time.DeltaTime, math.normalizesafe(characterControl.MoveVector), MathUtilities.GetUpFromRotation(characterRotation), characterComponent.RotationSharpness);
         }
     }
-    
+
     #region Character Processor Callbacks
     public void UpdateGroundingUp(
         ref ThirdPersonCharacterUpdateContext context,
         ref KinematicCharacterUpdateContext baseContext)
     {
         ref KinematicCharacterBody characterBody = ref CharacterAspect.CharacterBody.ValueRW;
-        
+
         CharacterAspect.Default_UpdateGroundingUp(ref characterBody);
     }
-    
+
     public bool CanCollideWithHit(
-        ref ThirdPersonCharacterUpdateContext context, 
+        ref ThirdPersonCharacterUpdateContext context,
         ref KinematicCharacterUpdateContext baseContext,
         in BasicHit hit)
     {
@@ -146,13 +147,13 @@ public readonly partial struct ThirdPersonCharacterAspect : IAspect, IKinematicC
     }
 
     public bool IsGroundedOnHit(
-        ref ThirdPersonCharacterUpdateContext context, 
+        ref ThirdPersonCharacterUpdateContext context,
         ref KinematicCharacterUpdateContext baseContext,
-        in BasicHit hit, 
+        in BasicHit hit,
         int groundingEvaluationType)
     {
         ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
-        
+
         return CharacterAspect.Default_IsGroundedOnHit(
             in this,
             ref context,
@@ -174,7 +175,7 @@ public readonly partial struct ThirdPersonCharacterAspect : IAspect, IKinematicC
         ref KinematicCharacterBody characterBody = ref CharacterAspect.CharacterBody.ValueRW;
         ref float3 characterPosition = ref CharacterAspect.LocalTransform.ValueRW.Position;
         ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
-        
+
         CharacterAspect.Default_OnMovementHit(
             in this,
             ref context,
@@ -211,7 +212,7 @@ public readonly partial struct ThirdPersonCharacterAspect : IAspect, IKinematicC
         float3 originalVelocityDirection)
     {
         ThirdPersonCharacterComponent characterComponent = CharacterComponent.ValueRO;
-        
+
         CharacterAspect.Default_ProjectVelocityOnHits(
             ref velocity,
             ref characterIsGrounded,

@@ -12,9 +12,9 @@ public static class FirstPersonCharacterUtilities
     }
 
     public static void GetCurrentWorldViewDirectionAndRotation(
-        quaternion characterRotation, 
-        quaternion localCharacterViewRotation, 
-        out float3 worldCharacterViewDirection, 
+        quaternion characterRotation,
+        quaternion localCharacterViewRotation,
+        out float3 worldCharacterViewDirection,
         out quaternion worldCharacterViewRotation)
     {
         worldCharacterViewRotation = GetCurrentWorldViewRotation(characterRotation, localCharacterViewRotation);
@@ -67,7 +67,7 @@ public static class FirstPersonCharacterUtilities
         float viewPitchAngleDegreesBeforeClamp = viewPitchDegrees;
         viewPitchDegrees = math.clamp(viewPitchDegrees, minPitchDegrees, maxPitchDegrees);
         canceledPitchDegrees = yawPitchDeltaDegrees.y - (viewPitchAngleDegreesBeforeClamp - viewPitchDegrees);
-        
+
         viewLocalRotation = CalculateLocalViewRotation(viewPitchDegrees, viewRollDegrees);
     }
 
@@ -98,7 +98,7 @@ public static class FirstPersonCharacterUtilities
         float viewPitchAngleDegreesBeforeClamp = viewPitchDegrees;
         viewPitchDegrees = math.clamp(viewPitchDegrees, minPitchDegrees, maxPitchDegrees);
         canceledPitchDegrees = yawPitchDeltaDegrees.y - (viewPitchAngleDegreesBeforeClamp - viewPitchDegrees);
-        
+
         viewLocalRotation = CalculateLocalViewRotation(viewPitchDegrees, viewRollDegrees);
     }
 
@@ -117,7 +117,7 @@ public static class FirstPersonCharacterUtilities
         ref float viewPitchDegrees,
         float minViewPitchDegrees,
         float maxViewPitchDegrees,
-        float2 pitchYawDegrees, 
+        float2 pitchYawDegrees,
         quaternion characterRotation)
     {
         // Yaw

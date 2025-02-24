@@ -5,9 +5,13 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 using Unity.CharacterController;
 
-[UpdateInGroup(typeof(InitializationSystemGroup))]
+[UpdateInGroup(typeof(SimulationSystemGroup), OrderFirst = true)]
+[UpdateBefore(typeof(FixedStepSimulationSystemGroup))]
 public partial class FirstPersonPlayerInputsSystem : SystemBase
 {
     protected override void OnCreate()
@@ -15,26 +19,28 @@ public partial class FirstPersonPlayerInputsSystem : SystemBase
         RequireForUpdate<FixedTickSystem.Singleton>();
         RequireForUpdate(SystemAPI.QueryBuilder().WithAll<FirstPersonPlayer, FirstPersonPlayerInputs>().Build());
     }
-    
+
     protected override void OnUpdate()
     {
         uint tick = SystemAPI.GetSingleton<FixedTickSystem.Singleton>().Tick;
-        
+
+#if ENABLE_INPUT_SYSTEM
         foreach (var (playerInputs, player) in SystemAPI.Query<RefRW<FirstPersonPlayerInputs>, FirstPersonPlayer>())
         {
             playerInputs.ValueRW.MoveInput = new float2
             {
-                x = (Input.GetKey(KeyCode.D) ? 1f : 0f) + (Input.GetKey(KeyCode.A) ? -1f : 0f),
-                y = (Input.GetKey(KeyCode.W) ? 1f : 0f) + (Input.GetKey(KeyCode.S) ? -1f : 0f),
+                x = (Keyboard.current.dKey.isPressed ? 1f : 0f) + (Keyboard.current.aKey.isPressed ? -1f : 0f),
+                y = (Keyboard.current.wKey.isPressed ? 1f : 0f) + (Keyboard.current.sKey.isPressed ? -1f : 0f),
             };
-            
-            playerInputs.ValueRW.LookInput = new float2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-            
-            if (Input.GetKeyDown(KeyCode.Space))
+
+            playerInputs.ValueRW.LookInput = Mouse.current.delta.ReadValue() * player.LookInputSensitivity;
+
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 playerInputs.ValueRW.JumpPressed.Set(tick);
             }
         }
+#endif
     }
 }
 
@@ -60,9 +66,9 @@ public partial struct FirstPersonPlayerVariableStepControlSystem : ISystem
             if (SystemAPI.HasComponent<FirstPersonCharacterControl>(player.ControlledCharacter))
             {
                 FirstPersonCharacterControl characterControl = SystemAPI.GetComponent<FirstPersonCharacterControl>(player.ControlledCharacter);
-                
+
                 characterControl.LookDegreesDelta = playerInputs.LookInput;
-            
+
                 SystemAPI.SetComponent(player.ControlledCharacter, characterControl);
             }
         }
@@ -88,13 +94,13 @@ public partial struct FirstPersonPlayerFixedStepControlSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         uint tick = SystemAPI.GetSingleton<FixedTickSystem.Singleton>().Tick;
-        
+
         foreach (var (playerInputs, player) in SystemAPI.Query<FirstPersonPlayerInputs, FirstPersonPlayer>().WithAll<Simulate>())
         {
             if (SystemAPI.HasComponent<FirstPersonCharacterControl>(player.ControlledCharacter))
             {
                 FirstPersonCharacterControl characterControl = SystemAPI.GetComponent<FirstPersonCharacterControl>(player.ControlledCharacter);
-                
+
                 quaternion characterRotation = SystemAPI.GetComponent<LocalTransform>(player.ControlledCharacter).Rotation;
 
                 // Move
@@ -105,7 +111,7 @@ public partial struct FirstPersonPlayerFixedStepControlSystem : ISystem
 
                 // Jump
                 characterControl.Jump = playerInputs.JumpPressed.IsSet(tick);
-            
+
                 SystemAPI.SetComponent(player.ControlledCharacter, characterControl);
             }
         }

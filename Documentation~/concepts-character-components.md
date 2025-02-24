@@ -5,7 +5,7 @@ This package contains character specific [components](https://docs.unity3d.com/P
 
 ## KinematicCharacterProperties
 
-`KinematicCharacterProperties` contains the character data that defines how the character behaves. Nothing in the character update writes to this component: it only reads from it. 
+`KinematicCharacterProperties` contains the character data that defines how the character behaves. Nothing in the character update writes to this component: it only reads from it.
 
 Examples of fields contained in this component:
 * `InterpolatePosition` and `InterpolateRotation`: Sets whether the character movement should be interpolated.
@@ -25,9 +25,9 @@ Examples of fields contained in this component:
 
 ## StoredKinematicCharacterData
 
-`StoredKinematicCharacterData` is a component that you will most likely never have to interact with, but it enables the character update to be performed safely in parallel and in a deterministic way. 
+`StoredKinematicCharacterData` is a component that you will most likely never have to interact with, but it enables the character update to be performed safely in parallel and in a deterministic way.
 
-During its physics update, a character might need to access data on other character entities, such as `Mass` or `RelativeVelocity`, and this data might change during each character's update (which may be happening in parallel). Therefore, to allow determinism, it's important to store a snapshot of all the character data before the character updates are executed. `StoredKinematicCharacterData` is where that data is stored, and this process of storing the data happens automatically. 
+During its physics update, a character might need to access data on other character entities, such as `Mass` or `RelativeVelocity`, and this data might change during each character's update (which may be happening in parallel). Therefore, to allow determinism, it's important to store a snapshot of all the character data before the character updates are executed. `StoredKinematicCharacterData` is where that data is stored, and this process of storing the data happens automatically.
 
 
 ## Character dynamic buffer components

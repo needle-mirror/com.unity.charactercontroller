@@ -41,7 +41,7 @@ using UnityEngine;
 public class MovingPlatformAuthoring : MonoBehaviour
 {
     public MovingPlatform MovingPlatform;
-    
+
     public class Baker : Baker<MovingPlatformAuthoring>
     {
         public override void Bake(MovingPlatformAuthoring authoring)
@@ -90,7 +90,7 @@ public partial class MovingPlatformSystem : SystemBase
 }
 ```
 
-The system uses a maths function to make kinematic physics bodies move with a given translation and rotation speed at a fixed timestep. It calculates a `targetPos` and a `targetRot`, and then calls `PhysicsVelocity.CalculateVelocityToTarget` to calculate and apply a physics velocity brings the rigidbody to that target position and rotation over the next fixed update. 
+The system uses a maths function to make kinematic physics bodies move with a given translation and rotation speed at a fixed timestep. It calculates a `targetPos` and a `targetRot`, and then calls `PhysicsVelocity.CalculateVelocityToTarget` to calculate and apply a physics velocity brings the rigidbody to that target position and rotation over the next fixed update.
 
 To use this example moving platform in a scene:
 
