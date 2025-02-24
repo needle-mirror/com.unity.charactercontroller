@@ -1,7 +1,7 @@
 # Changelog
 
 
-## [1.3.10] - 2025-02-24
+## [1.3.11] - 2025-02-24
 
 ### Changed
 * Updated package dependencies
