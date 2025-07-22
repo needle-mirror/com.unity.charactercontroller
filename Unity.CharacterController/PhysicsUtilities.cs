@@ -246,7 +246,7 @@ namespace Unity.CharacterController
             float3 pointVelocityB = physicsVelB.GetLinearVelocity(physicsMassB, transformB.pos, transformB.rot, collisionPoint);
 
             float3 centerOfMassA = physicsMassA.GetCenterOfMassWorldSpace(transformA.pos, transformA.rot);
-            float3 centerOfMassB = physicsMassA.GetCenterOfMassWorldSpace(transformB.pos, transformB.rot);
+            float3 centerOfMassB = physicsMassB.GetCenterOfMassWorldSpace(transformB.pos, transformB.rot);
             float3 centerOfMassAToPoint = collisionPoint - centerOfMassA;
             float3 centerOfMassBToPoint = collisionPoint - centerOfMassB;
 

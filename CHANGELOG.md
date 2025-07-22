@@ -1,7 +1,13 @@
 # Changelog
 
 
-## [1.3.11] - 2025-02-24
+## [1.3.12] - 2025-07-22
+
+### Fixed
+* Fixed incorrect center of mass evaluation in `PhysicsUtilities.SolveCollisionImpulses`
+
+
+## [1.3.10] - 2025-02-24
 
 ### Changed
 * Updated package dependencies
